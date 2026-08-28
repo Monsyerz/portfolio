@@ -49,10 +49,16 @@ let i = 0;
 while (i < projects.length) {
 
     const projectItem = document.createElement("li");
+    const projectLanguage = document.createElement("p");
+    const projectDescription = document.createElement("p");
 
     projectItem.textContent = projects[i].name;
+    projectLanguage.textContent = projects[i].language;
+    projectDescription.textContent = projects[i].description;
 
     projectList.appendChild(projectItem);
+    projectItem.appendChild(projectLanguage);
+    projectItem.appendChild(projectDescription);
 
     i++;
 }
