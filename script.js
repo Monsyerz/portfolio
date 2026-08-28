@@ -44,21 +44,27 @@ const projects=[
 
 const projectList = document.getElementById("project-list");
 
-let i = 0;
-
+let i=0;
 while (i < projects.length) {
+
+    const currentProject = projects[i];
 
     const projectItem = document.createElement("li");
     const projectLanguage = document.createElement("p");
     const projectDescription = document.createElement("p");
 
-    projectItem.textContent = projects[i].name;
-    projectLanguage.textContent = projects[i].language;
-    projectDescription.textContent = projects[i].description;
+    projectItem.className = "project-item";
+    projectLanguage.className = "project-language";
+    projectDescription.className = "project-description";
 
-    projectList.appendChild(projectItem);
+    projectItem.textContent = currentProject.name;
+    projectLanguage.textContent = currentProject.language;
+    projectDescription.textContent = currentProject.description;
+
     projectItem.appendChild(projectLanguage);
     projectItem.appendChild(projectDescription);
+
+    projectList.appendChild(projectItem);
 
     i++;
 }
