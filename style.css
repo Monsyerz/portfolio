@@ -171,6 +171,11 @@ section .container {
     color: rgb(80, 255, 100);
 }
 
+#project-language {
+    margin-top: 5px;
+    font-size: 13px;
+    color: rgb(80, 255, 100);
+}
 
 /* ---------- ABOUT ---------- */
 
@@ -223,7 +228,11 @@ section .container {
     width: 100%;
     padding: 0 30px;
 }
-
+#project-language {
+    margin-top: 5px;
+    font-size: 13px;
+    color: rgb(80, 255, 100);
+}
 
 /* ---------- MOBILE ---------- */
 
