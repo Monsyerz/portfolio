@@ -177,7 +177,9 @@ section .container {
     color: rgb(80, 255, 100);
 }
 
-
+.project-item {
+    padding: 30px 0;
+}
 
 /* ---------- ABOUT ---------- */
 

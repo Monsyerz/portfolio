@@ -17,34 +17,36 @@ window.addEventListener("scroll", function() {
 });
 
 
-const projects=[
+const projects = [
 
-    {   
-        name:"Expense Tracker",
-        language:"Python",
-        description: "Tracks expenses ",
-
+    {
+        name: "Expense Tracker",
+        language: "Python",
+        description: "Tracks expenses",
+        github: "https://github.com/Monsyerz/ShopTracker"
     },
 
-        {
+    {
         name: "Black Jack Game",
         language: "Python",
-        description: "Simple Black Jack game"
+        description: "Simple Black Jack game",
+        github: "https://github.com/Monsyerz/blackjack_game"
     },
 
     {
         name: "Budget Application",
         language: "Python, Flask",
-        description: "Website for tracking my expenses"
+        description: "Website for tracking my expenses",
+        github: "https://github.com/Monsyerz/tracking_household_app"
     }
 
 ];
 
 
-
 const projectList = document.getElementById("project-list");
 
-let i=0;
+let i = 0;
+
 while (i < projects.length) {
 
     const currentProject = projects[i];
@@ -52,19 +54,27 @@ while (i < projects.length) {
     const projectItem = document.createElement("li");
     const projectLanguage = document.createElement("p");
     const projectDescription = document.createElement("p");
+    const projectLink = document.createElement("a");
 
     projectItem.className = "project-item";
     projectLanguage.className = "project-language";
     projectDescription.className = "project-description";
+    projectLink.className = "project-link";
+
 
     projectItem.textContent = currentProject.name;
     projectLanguage.textContent = currentProject.language;
     projectDescription.textContent = currentProject.description;
+    projectLink.textContent = "Check it out on GitHub";
+    projectLink.href = currentProject.github;
+    projectLink.target = "_blank";
 
     projectItem.appendChild(projectLanguage);
     projectItem.appendChild(projectDescription);
+    projectItem.appendChild(projectLink);
 
     projectList.appendChild(projectItem);
+
 
     i++;
 }
