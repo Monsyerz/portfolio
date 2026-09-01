@@ -146,29 +146,19 @@ section .container {
     font-size: 18px;
 }
 
-
 /* ---------- PROJECTS ---------- */
 
 #projects h3 {
     font-size: 32px;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 .project ul {
     list-style: none;
 }
 
-.project li {
-    margin-bottom: 15px;
-}
-
-.project a {
-    color: white;
-    text-decoration: none;
-}
-
-.project a:hover {
-    color: rgb(80, 255, 100);
+.project-item {
+    padding: 0 0 35px 0;
 }
 
 .project-language {
@@ -177,38 +167,24 @@ section .container {
     color: rgb(80, 255, 100);
 }
 
-.project-item {
-    padding: 30px 0;
+.project-description {
+    margin-top: 2px;
+    line-height: 1.4;
 }
 
-/* ---------- ABOUT ---------- */
+.project .project-link {
+    display: block;
+    width: fit-content;
 
-#about h2,
-#skills h2,
-#contact h2 {
-    font-size: 32px;
-    margin-bottom: 30px;
-}
-
-.about-content {
-    margin-top: 30px;
-}
-
-.about-content p {
-    margin-bottom: 20px;
-    max-width: 700px;
-    line-height: 1.6;
-}
-
-
-/* ---------- CONTACT ---------- */
-
-#contact a {
-    color: white;
-}
-
-#contact a:hover {
     color: rgb(80, 255, 100);
+    text-decoration: none;
+
+    font-size: 13px;
+    letter-spacing: 1px;
+}
+
+.project .project-link:hover {
+    color: white;
 }
 
 

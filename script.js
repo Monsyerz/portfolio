@@ -68,6 +68,7 @@ while (i < projects.length) {
     projectLink.textContent = "Check it out on GitHub";
     projectLink.href = currentProject.github;
     projectLink.target = "_blank";
+    projectLink.rel = "noopener noreferrer";
 
     projectItem.appendChild(projectLanguage);
     projectItem.appendChild(projectDescription);
