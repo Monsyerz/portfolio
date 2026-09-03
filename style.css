@@ -183,6 +183,46 @@ section p {
     line-height: 1.6;
 }
 
+.home-label {
+    margin-bottom: 15px;
+
+    color: var(--accent);
+
+    font-size: 12px !important;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.home-links {
+    display: flex;
+    gap: 15px;
+
+    margin-top: 30px;
+}
+
+.home-links a {
+    padding: 12px 18px;
+
+    border: 1px solid var(--border);
+
+    color: var(--text);
+    text-decoration: none;
+
+    font-size: 13px;
+    letter-spacing: 0.8px;
+
+    transition:
+        color 0.2s ease,
+        border-color 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.home-links a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background-color: var(--surface);
+}
+
 
 /* ---------- ABOUT ---------- */
 
@@ -202,8 +242,8 @@ section p {
 
 /* ---------- PROJECTS ---------- */
 
-#projects h3 {
-    font-size: 34px;
+#projects h2 {
+    font-size: 36px;
     margin-bottom: 30px;
 }
 
@@ -375,6 +415,10 @@ section p {
 
     section h2 {
         font-size: 30px;
+    }
+
+    .home-links {
+        flex-wrap: wrap;
     }
 
     .skills-content {
