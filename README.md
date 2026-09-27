@@ -1,6 +1,6 @@
 # Kacper Popek — Engineering & Software Portfolio
 
-A personal learning project built with HTML, CSS and vanilla JavaScript. The original black and green palette, KP logo, software projects and scroll background are retained.
+A personal learning project built with HTML, CSS and vanilla JavaScript. The black and green style and recognizable KP mark are retained. An inline SVG logo and page background share a scroll-driven palette.
 
 ## Run locally
 
@@ -8,7 +8,8 @@ Open `index.html` in a browser, or serve this directory with `python -m http.ser
 
 ## Features
 
-- Engineering and Software filters with keyboard controls and result announcements
+- All six project cards remain visible without JavaScript; Engineering and Software filters progressively enhance the HTML
+- Software descriptions checked against repository code; unavailable private source links are labeled
 - Case studies for a robotic arm, glass enclosures and metal baffle fabrication
 - Reviewed Inventor screenshots and CAD detail galleries with full-size links
 - Responsive layouts and reduced-motion support
@@ -33,3 +34,7 @@ These omissions are precautionary, not a claim of confirmed client identities. S
 ## Checks
 
 Run `node --check script.js` and `git diff --check`. The existing GitHub Actions workflow runs a Jekyll container build for pull requests to `main`. There is no package manifest or existing local test suite.
+
+## Review and missing materials
+
+See [REVIEW_NOTES.md](REVIEW_NOTES.md) for source evidence, withheld CAD files, missing software screenshots, outstanding owner decisions and validation details.

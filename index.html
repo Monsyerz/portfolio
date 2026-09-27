@@ -14,11 +14,12 @@
 
 
     <body>
+        <a class="skip-link" href="#main">Skip to content</a>
         
         <header>
             <div class="container">
                 <div class="logo">
-                    <h1><a href="#home"><img src="logo.png" alt="logo"></a></h1>
+                    <a href="#home" aria-label="Kacper Popek — home"><svg class="logo-mark" viewBox="280 265 735 620" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="14" stroke-linejoin="miter"><path d="M388 535V287H304V858H388V570L668 858H783L498 569L653 413H835C925 413 925 552 835 552H692L617 635L735 762V638H843C1039 638 1039 327 843 327H625L388 569"/></g></svg><span class="logo-name">Kacper<br>Popek</span></a>
                 </div>
 
                 <nav class="navbar" aria-label="Main navigation">
@@ -35,7 +36,7 @@
             </div>
         </header>
 
-        <main>
+        <main id="main">
         <section id="home">
             <div class="container">
                 <p class="home-label">ENGINEERING × SOFTWARE</p>
@@ -43,8 +44,10 @@
                 <h1>Hi, I'm Kacper.</h1>
 
                 <p>
-                    I bring mechanical design and technical drafting experience to software development.
+                    I connect CAD and mechatronics experience with Python, SQL and web development.
                 </p>
+
+                <p class="availability">Seeking software development and technology roles.</p>
 
                 <div class="home-links">
                     <a href="#projects">View Projects</a>
@@ -71,14 +74,19 @@
                 <div class="project">
                     <h2>Selected Projects</h2>
                     <p class="section-intro">Mechanical design, professional drafting and software built around practical problems.</p>
-                    <div class="project-filters" role="group" aria-label="Filter projects">
+                    <div class="project-filters" hidden role="group" aria-label="Filter projects">
                         <button type="button" class="filter-button active" data-filter="all" aria-pressed="true">All</button>
                         <button type="button" class="filter-button" data-filter="engineering" aria-pressed="false">Engineering</button>
                         <button type="button" class="filter-button" data-filter="software" aria-pressed="false">Software</button>
                     </div>
                     <p id="project-status" class="project-status" role="status" aria-live="polite"></p>
-                    <noscript><p>Engineering case studies: <a href="projects/robotic-arm.html">Robotic Arm</a>, <a href="projects/glass-enclosures.html">Glass Enclosures</a>, <a href="projects/metal-baffles.html">Metal Baffles</a>. Enable JavaScript to filter all projects.</p></noscript>
                     <ul id="project-list">
+<li class="project-item" data-category="software"><p class="project-category">software</p><h3>Household Budget Tracker</h3><p class="project-language">Python · Flask · JSON</p><p class="project-description">Estimate monthly household income from weekly earnings, record expenses and a savings goal, then see what remains. A Flask dashboard groups spending by category; saving a budget avoids re-entering the same information.</p><p class="project-context">Web interface + command line · Learning project</p><a class="project-link" href="https://github.com/Monsyerz/tracking_household_app" target="_blank" rel="noopener noreferrer">View source on GitHub →<span class="sr-only"> Household Budget Tracker</span></a></li>
+<li class="project-item" data-category="software"><p class="project-category">software</p><h3>ShopFlow</h3><p class="project-language">Python · Input validation</p><p class="project-description">Create a project record with a description, start date, due date and status. The command-line workflow validates required fields and date formats, helping keep project information consistent before displaying a summary.</p><p class="project-context">Command-line prototype · Persistent storage is not yet implemented</p><a class="project-link" href="https://github.com/Monsyerz/ShopTracker" target="_blank" rel="noopener noreferrer">View source on GitHub →<span class="sr-only"> ShopFlow</span></a></li>
+<li class="project-item" data-category="software"><p class="project-category">software</p><h3>Blackjack Game</h3><p class="project-language">Python · Game logic</p><p class="project-description">Play a text-based hand against the computer: draw or stand, calculate card totals and compare the result. A course-based exercise in turning card-game rules into functions and control flow.</p><p class="project-context">Based on the 100 Days of Code course · Source repository is private</p></li>
+<li class="project-item" data-category="engineering"><img class="project-preview" src="assets/projects/robotic-arm/assembly.jpg" alt="Robotic Arm drawing preview" loading="lazy"><p class="project-category">engineering</p><h3>Robotic Arm</h3><p class="project-language">Mechanical design · Autodesk Inventor</p><p class="project-description">From an individual component to an articulated assembly and 2D views: an academic exercise in representing a mechanical concept.</p><p class="project-context">Academic concept · Modeling and documentation</p><a class="project-link" href="projects/robotic-arm.html">Read case study →<span class="sr-only"> Robotic Arm</span></a></li>
+<li class="project-item" data-category="engineering"><img class="project-preview" src="assets/projects/glass-enclosures/residential-1.jpg" alt="Architectural Glass Enclosures drawing preview" loading="lazy"><p class="project-category">engineering</p><h3>Architectural Glass Enclosures</h3><p class="project-language">Professional drafting · AutoCAD</p><p class="project-description">Plans, elevations and connection details explain how glass, hardware and surrounding finishes meet.</p><p class="project-context">Professional drafting · Selected drawing excerpts</p><a class="project-link" href="projects/glass-enclosures.html">Read case study →<span class="sr-only"> Architectural Glass Enclosures</span></a></li>
+<li class="project-item" data-category="engineering"><img class="project-preview" src="assets/projects/metal-baffles/panels-1.jpg" alt="Metal Baffle Fabrication drawing preview" loading="lazy"><p class="project-category">engineering</p><h3>Metal Baffle Fabrication</h3><p class="project-language">Fabrication documentation · AutoCAD</p><p class="project-description">Panel outlines, hole locations and cutouts arranged in a dimensioned sheet for fabrication coordination.</p><p class="project-context">Professional drafting · Fabrication documentation</p><a class="project-link" href="projects/metal-baffles.html">Read case study →<span class="sr-only"> Metal Baffle Fabrication</span></a></li>
                     </ul>
                 </div>
             </div>

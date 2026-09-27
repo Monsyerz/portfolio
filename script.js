@@ -1,124 +1,59 @@
-const projects = [
-  {
-    name: "Robotic Arm",
-    category: "engineering",
-    language: "Mechanical design · Autodesk Inventor",
-    description: "An academic mechanical design project with modeled components, an assembly and technical drawings.",
-    image: "assets/projects/robotic-arm/assembly.jpg",
-    link: "projects/robotic-arm.html",
-    linkText: "Read case study"
-  },
-  {
-    name: "Architectural Glass Enclosures",
-    category: "engineering",
-    language: "Professional drafting · AutoCAD",
-    description: "Shop drawings and revisions for custom glass enclosures, including elevations, hardware and installation details.",
-    image: "assets/projects/glass-enclosures/residential-1.jpg",
-    link: "projects/glass-enclosures.html",
-    linkText: "Read case study"
-  },
-  {
-    name: "Metal Baffle Fabrication",
-    category: "engineering",
-    language: "Fabrication documentation · AutoCAD",
-    description: "Dimensioned panel drawings with hole locations, cutouts and part identifiers for manufacturing coordination.",
-    image: "assets/projects/metal-baffles/panels-1.jpg",
-    link: "projects/metal-baffles.html",
-    linkText: "Read case study"
-  },
-  {
-    name: "Budget Application",
-    category: "software",
-    language: "Python · Flask",
-    description: "A web application for tracking household spending.",
-    link: "https://github.com/Monsyerz/tracking_household_app",
-    linkText: "View code"
-  },
-  {
-    name: "Expense Tracker",
-    category: "software",
-    language: "Python",
-    description: "A Python project for recording expenses.",
-    link: "https://github.com/Monsyerz/ShopTracker",
-    linkText: "View code"
-  },
-  {
-    name: "Blackjack Game",
-    category: "software",
-    language: "Python",
-    description: "A card game project exploring game logic and program structure.",
-    link: "https://github.com/Monsyerz/blackjack_game",
-    linkText: "View code"
-  }
-];
-
-const projectList = document.querySelector("#project-list");
-const filterButtons = document.querySelectorAll(".filter-button");
-
-function renderProjects(filter = "all") {
-  if (!projectList) return;
-  projectList.replaceChildren();
-  projects.filter(project => filter === "all" || project.category === filter).forEach(project => {
-    const item = document.createElement("li");
-    item.className = "project-item";
-    const heading = document.createElement("h3");
-    heading.textContent = project.name;
-    if (project.image) {
-      const preview = document.createElement("img");
-      preview.className = "project-preview";
-      preview.src = project.image;
-      preview.alt = `${project.name} drawing preview`;
-      preview.loading = "lazy";
-      item.append(preview);
-    }
-    const category = document.createElement("p");
-    category.className = "project-category";
-    category.textContent = project.category;
-    const language = document.createElement("p");
-    language.className = "project-language";
-    language.textContent = project.language;
-    const description = document.createElement("p");
-    description.className = "project-description";
-    description.textContent = project.description;
-    const link = document.createElement("a");
-    link.className = "project-link";
-    link.textContent = project.linkText + " →";
-    link.href = project.link;
-    if (project.link.startsWith("https://")) {
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-    }
-    item.append(heading, category, language, description, link);
-    projectList.append(item);
-  });
-  const status = document.querySelector("#project-status");
-  if (status) status.textContent = `${projectList.children.length} projects shown`;
-}
-
-filterButtons.forEach(button => button.addEventListener("click", () => {
-  filterButtons.forEach(other => {
-    const active = other === button;
-    other.classList.toggle("active", active);
-    other.setAttribute("aria-pressed", String(active));
-  });
-  renderProjects(button.dataset.filter);
-}));
-renderProjects();
-
-const header = document.querySelector("header");
+// HTML is the source of truth: projects remain readable if this script fails to load.
+const root = document.documentElement;
+const header = document.querySelector('header');
+const cards = [...document.querySelectorAll('#project-list > .project-item')];
+const filters = document.querySelector('.project-filters');
+const buttons = [...document.querySelectorAll('.filter-button')];
+const status = document.querySelector('#project-status');
 let scheduled = false;
-function updateScroll() {
-  const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-  const progress = maxScroll > 0 ? Math.min(window.scrollY / maxScroll, 1) : 0;
-  const color = `rgb(5, ${Math.floor(5 + progress * 26)}, 20)`;
-  document.body.style.backgroundColor = color;
-  header.style.backgroundColor = color;
+
+function updateTheme() {
+  const maxScroll = root.scrollHeight - window.innerHeight;
+  const progress = maxScroll > 0 ? Math.max(0, Math.min(window.scrollY / maxScroll, 1)) : 0;
+  // One scroll position drives both surfaces and the contrasting KP mark.
+  root.style.setProperty('--page-bg', `rgb(5, ${5 + progress * 26}, 20)`);
+  root.style.setProperty('--logo-color', `rgb(${114 + progress * 66}, ${214 + progress * 29}, ${138 + progress * 52})`);
   scheduled = false;
 }
-window.addEventListener("scroll", () => {
-  if (!scheduled) {
-    window.requestAnimationFrame(updateScroll);
-    scheduled = true;
-  }
-}, { passive: true });
-updateScroll();
+
+function scheduleTheme() {
+  if (scheduled) return;
+  scheduled = true;
+  window.requestAnimationFrame(updateTheme);
+}
+
+function filterProjects(filter) {
+  let count = 0;
+  cards.forEach(card => {
+    card.hidden = filter !== 'all' && card.dataset.category !== filter;
+    if (!card.hidden) count += 1;
+  });
+  buttons.forEach(button => {
+    const active = button.dataset.filter === filter;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+  if (status) status.textContent = `${count} projects shown`;
+  scheduleTheme();
+}
+
+if (cards.length && filters) {
+  buttons.forEach(button => button.addEventListener('click', () => filterProjects(button.dataset.filter)));
+  filterProjects('all');
+  filters.hidden = false;
+}
+
+function updateHeaderHeight() {
+  if (header) root.style.setProperty('--header-height', `${header.getBoundingClientRect().height}px`);
+  scheduleTheme();
+}
+window.addEventListener('scroll', scheduleTheme, { passive: true });
+window.addEventListener('resize', updateHeaderHeight);
+window.addEventListener('load', updateHeaderHeight);
+if ('ResizeObserver' in window) {
+  const observer = new ResizeObserver(updateHeaderHeight);
+  if (header) observer.observe(header);
+  observer.observe(document.body);
+}
+updateHeaderHeight();
+updateTheme();
