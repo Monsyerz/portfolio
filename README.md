@@ -19,20 +19,16 @@ Open `index.html` in a browser, or serve this directory with `python -m http.ser
 
 All ten supplied JPEGs were visually reviewed along with filenames, image metadata and source text. No client names, addresses, contact details or credentials were found in the included material. JPEG metadata contains only basic JFIF information; no EXIF was present. The existing owner's public contact information and original logo are retained.
 
-Included: `robotic-arm/assembly.jpg`, `robotic-arm/component.jpg`, `glass-enclosures/residential-3.jpg` and `glass-enclosures/bathtub-3.jpg`. The CAD images show connection/hardware details and generic product references. This review does not establish third-party ownership or contractual publication rights.
+Eight images are included: three residential enclosure drawings, one bathtub hardware detail, one metal fabrication sheet and three robotic arm images. The owner explicitly approved the seven reattached residential, metal and robotic arm images for inclusion, including their visible dimensions, part identifiers and the technical-view author/date title block. The previously reviewed bathtub hardware detail is retained. The images are reproduced without alteration.
 
-Omitted from Git, previews and galleries because of privacy uncertainty:
+Still omitted from Git, previews and galleries because of privacy uncertainty:
 
 | Supplied path under assets/projects/ | Reason |
 | --- | --- |
-| `glass-enclosures/residential-1.jpg` | Project-specific layout and exact dimensions |
-| `glass-enclosures/residential-2.jpg` | Project-specific layout and exact dimensions |
-| `glass-enclosures/bathtub-1.jpg` | Full room plan, dimensions and coordination annotation |
-| `glass-enclosures/bathtub-2.jpg` | Detailed room elevations and dimensions |
-| `metal-baffles/panels-1.jpg` | Production geometry, exact dimensions and part identifiers |
-| `robotic-arm/technical-views.jpg` | Remaining author/date title block; attribution not confidently verified |
+| `glass-enclosures/bathtub-1.jpg` | Full room plan, dimensions and coordination annotation; not included in the owner's subsequent approval |
+| `glass-enclosures/bathtub-2.jpg` | Detailed room elevations and dimensions; not included in the owner's subsequent approval |
 
-The omissions are precautionary, not a claim of confirmed client identities. The metal baffle case study provides a text description. Source PDFs and native CAD files were not supplied or added. The ZIP's claim of prior anonymization was not treated as publication approval.
+These omissions are precautionary, not a claim of confirmed client identities. Source PDFs and native CAD files were not supplied or added. The ZIP's anonymization note was treated as source material; publication selection reflects the review and the owner's explicit follow-up approval.
 
 ## Checks
 

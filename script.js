@@ -13,7 +13,7 @@ const projects = [
     category: "engineering",
     language: "Professional drafting · AutoCAD",
     description: "Shop drawings and revisions for custom glass enclosures, including elevations, hardware and installation details.",
-    image: "assets/projects/glass-enclosures/residential-3.jpg",
+    image: "assets/projects/glass-enclosures/residential-1.jpg",
     link: "projects/glass-enclosures.html",
     linkText: "Read case study"
   },
@@ -22,6 +22,7 @@ const projects = [
     category: "engineering",
     language: "Fabrication documentation · AutoCAD",
     description: "Dimensioned panel drawings with hole locations, cutouts and part identifiers for manufacturing coordination.",
+    image: "assets/projects/metal-baffles/panels-1.jpg",
     link: "projects/metal-baffles.html",
     linkText: "Read case study"
   },
