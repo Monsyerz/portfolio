@@ -1,81 +1,59 @@
-window.addEventListener("scroll", function() {
+// HTML is the source of truth: projects remain readable if this script fails to load.
+const root = document.documentElement;
+const header = document.querySelector('header');
+const cards = [...document.querySelectorAll('#project-list > .project-item')];
+const filters = document.querySelector('.project-filters');
+const buttons = [...document.querySelectorAll('.filter-button')];
+const status = document.querySelector('#project-status');
+let scheduled = false;
 
-    const scrollPosition = window.scrollY;
-
-    const maxScroll =
-        document.documentElement.scrollHeight - window.innerHeight;
-
-    const scrollProgress = scrollPosition / maxScroll;
-
-    const green = Math.floor(5 + scrollProgress * 26);
-
-    const backgroundColor = `rgb(5, ${green}, 20)`;
-
-    document.body.style.backgroundColor = backgroundColor;
-    document.querySelector("header").style.backgroundColor = backgroundColor;
-
-});
-
-
-const projects = [
-
-    {
-        name: "Expense Tracker",
-        language: "Python",
-        description: "Tracks expenses",
-        github: "https://github.com/Monsyerz/ShopTracker"
-    },
-
-    {
-        name: "Black Jack Game",
-        language: "Python",
-        description: "Simple Black Jack game",
-        github: "https://github.com/Monsyerz/blackjack_game"
-    },
-
-    {
-        name: "Budget Application",
-        language: "Python, Flask",
-        description: "Website for tracking my expenses",
-        github: "https://github.com/Monsyerz/tracking_household_app"
-    }
-
-];
-
-
-const projectList = document.getElementById("project-list");
-
-let i = 0;
-
-while (i < projects.length) {
-
-    const currentProject = projects[i];
-
-    const projectItem = document.createElement("li");
-    const projectLanguage = document.createElement("p");
-    const projectDescription = document.createElement("p");
-    const projectLink = document.createElement("a");
-
-    projectItem.className = "project-item";
-    projectLanguage.className = "project-language";
-    projectDescription.className = "project-description";
-    projectLink.className = "project-link";
-
-
-    projectItem.textContent = currentProject.name;
-    projectLanguage.textContent = currentProject.language;
-    projectDescription.textContent = currentProject.description;
-    projectLink.textContent = "Check it out on GitHub";
-    projectLink.href = currentProject.github;
-    projectLink.target = "_blank";
-    projectLink.rel = "noopener noreferrer";
-
-    projectItem.appendChild(projectLanguage);
-    projectItem.appendChild(projectDescription);
-    projectItem.appendChild(projectLink);
-
-    projectList.appendChild(projectItem);
-
-
-    i++;
+function updateTheme() {
+  const maxScroll = root.scrollHeight - window.innerHeight;
+  const progress = maxScroll > 0 ? Math.max(0, Math.min(window.scrollY / maxScroll, 1)) : 0;
+  // One scroll position drives both surfaces and the contrasting KP mark.
+  root.style.setProperty('--page-bg', `rgb(5, ${5 + progress * 26}, 20)`);
+  root.style.setProperty('--logo-color', `rgb(${114 + progress * 66}, ${214 + progress * 29}, ${138 + progress * 52})`);
+  scheduled = false;
 }
+
+function scheduleTheme() {
+  if (scheduled) return;
+  scheduled = true;
+  window.requestAnimationFrame(updateTheme);
+}
+
+function filterProjects(filter) {
+  let count = 0;
+  cards.forEach(card => {
+    card.hidden = filter !== 'all' && card.dataset.category !== filter;
+    if (!card.hidden) count += 1;
+  });
+  buttons.forEach(button => {
+    const active = button.dataset.filter === filter;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+  if (status) status.textContent = `${count} projects shown`;
+  scheduleTheme();
+}
+
+if (cards.length && filters) {
+  buttons.forEach(button => button.addEventListener('click', () => filterProjects(button.dataset.filter)));
+  filterProjects('all');
+  filters.hidden = false;
+}
+
+function updateHeaderHeight() {
+  if (header) root.style.setProperty('--header-height', `${header.getBoundingClientRect().height}px`);
+  scheduleTheme();
+}
+window.addEventListener('scroll', scheduleTheme, { passive: true });
+window.addEventListener('resize', updateHeaderHeight);
+window.addEventListener('load', updateHeaderHeight);
+if ('ResizeObserver' in window) {
+  const observer = new ResizeObserver(updateHeaderHeight);
+  if (header) observer.observe(header);
+  observer.observe(document.body);
+}
+updateHeaderHeight();
+updateTheme();
