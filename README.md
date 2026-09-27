@@ -1,107 +1,39 @@
-Personal Developer Portfolio
+# Kacper Popek — Engineering & Software Portfolio
 
-A personal portfolio website built from scratch with HTML, CSS, and JavaScript.
+A personal learning project built with HTML, CSS and vanilla JavaScript. The original black and green palette, KP logo, software projects and scroll background are retained.
 
-The main goal of this project is to learn JavaScript through practical implementation while building a portfolio that I can continue improving and eventually use as my main developer website.
+## Run locally
 
-Current Status
+Open `index.html` in a browser, or serve this directory with `python -m http.server 8000` and visit `http://localhost:8000/`.
 
-This project is currently a work in progress.
+## Features
 
-The current version includes:
+- Engineering and Software filters with keyboard controls and result announcements
+- Case studies for a robotic arm, glass enclosures and metal baffle fabrication
+- Reviewed Inventor screenshots and CAD detail galleries with full-size links
+- Responsive layouts and reduced-motion support
 
-Responsive page structure
-Sticky navigation bar
-Custom KP logo
-Home section
-About section
-Projects section
-Skills section
-Contact section
-Footer
-Smooth scrolling
-Dynamic background color based on page scroll position
-JavaScript Features
+`index.html`, `style.css` and `script.js` power the home page. `projects/` contains the case studies; `assets/projects/` contains only the selected images.
 
-The first JavaScript functionality implemented in the project is a scroll-based background transition.
+## Image privacy review
 
-The script currently uses:
+All ten supplied JPEGs were visually reviewed along with filenames, image metadata and source text. No client names, addresses, contact details or credentials were found in the included material. JPEG metadata contains only basic JFIF information; no EXIF was present. The existing owner's public contact information and original logo are retained.
 
-window.addEventListener()
-window.scrollY
-document.documentElement.scrollHeight
-window.innerHeight
-Variables using const
-Scroll progress calculations
-Dynamic CSS manipulation
-document.querySelector()
+Included: `robotic-arm/assembly.jpg`, `robotic-arm/component.jpg`, `glass-enclosures/residential-3.jpg` and `glass-enclosures/bathtub-3.jpg`. The CAD images show connection/hardware details and generic product references. This review does not establish third-party ownership or contractual publication rights.
 
-The page begins with an almost black background and gradually transitions into a dark green tone as the user scrolls down.
+Omitted from Git, previews and galleries because of privacy uncertainty:
 
-Design Direction
+| Supplied path under assets/projects/ | Reason |
+| --- | --- |
+| `glass-enclosures/residential-1.jpg` | Project-specific layout and exact dimensions |
+| `glass-enclosures/residential-2.jpg` | Project-specific layout and exact dimensions |
+| `glass-enclosures/bathtub-1.jpg` | Full room plan, dimensions and coordination annotation |
+| `glass-enclosures/bathtub-2.jpg` | Detailed room elevations and dimensions |
+| `metal-baffles/panels-1.jpg` | Production geometry, exact dimensions and part identifiers |
+| `robotic-arm/technical-views.jpg` | Remaining author/date title block; attribution not confidently verified |
 
-The visual direction is intentionally simple and minimal.
+The omissions are precautionary, not a claim of confirmed client identities. The metal baffle case study provides a text description. Source PDFs and native CAD files were not supplied or added. The ZIP's claim of prior anonymization was not treated as publication approval.
 
-The website uses:
+## Checks
 
-Sharp edges
-No rounded UI elements
-Black background
-White borders and typography
-Green accents
-Minimal cyber / futuristic influence
-
-The goal is to keep the interface clean while giving the portfolio its own recognizable visual identity.
-
-Project Structure
-portfolio/
-│
-├── index.html
-├── style.css
-├── script.js
-├── logo.png
-└── README.md
-Technologies
-HTML5
-CSS3
-JavaScript
-Planned Features
-
-The next stages of development will focus more heavily on JavaScript.
-
-Planned improvements include:
-
-Store portfolio projects as JavaScript objects
-Render project cards dynamically using JavaScript
-Learn and use arrays and objects
-Practice forEach() and other array methods
-DOM manipulation
-Project filtering
-Interactive project elements
-Additional scroll effects
-Improved responsive design
-Final portfolio content and project descriptions
-GitHub project integration later in development
-Purpose
-
-This project is both a portfolio and a learning project.
-
-Instead of completing a JavaScript course first and building something afterward, new JavaScript concepts are being learned and immediately implemented into this website.
-
-The goal is to gradually develop the project from a simple static website into a more interactive developer portfolio.
-
-Running the Project
-
-Clone the repository:
-
-git clone <repository-url>
-
-Open the project directory and run index.html in a browser.
-
-A local development extension such as Live Server can also be used during development.
-
-Development
-
-The project will be updated continuously as new JavaScript concepts are learned and implemented.
-
-Built by Kacper Popek
+Run `node --check script.js` and `git diff --check`. The existing GitHub Actions workflow runs a Jekyll container build for pull requests to `main`. There is no package manifest or existing local test suite.

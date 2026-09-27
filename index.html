@@ -5,7 +5,8 @@
 
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Kacper Popek | Software Developer</title>
+        <title>Kacper Popek | Engineering & Software</title>
+        <meta name="description" content="Kacper Popek's portfolio: mechanical design, technical drafting, and software development projects.">
         <link rel="stylesheet" href="style.css">
         <script src="script.js" defer></script>
 
@@ -20,7 +21,7 @@
                     <h1><a href="#home"><img src="logo.png" alt="logo"></a></h1>
                 </div>
 
-                <nav class="navbar">
+                <nav class="navbar" aria-label="Main navigation">
     
                     <ul class="links">
                         <li><a href="#home">Home</a></li>
@@ -34,15 +35,15 @@
             </div>
         </header>
 
+        <main>
         <section id="home">
             <div class="container">
-                <p class="home-label">SOFTWARE ENGINEERING STUDENT</p>
+                <p class="home-label">ENGINEERING × SOFTWARE</p>
 
                 <h1>Hi, I'm Kacper.</h1>
 
                 <p>
-                    I build practical applications with Python,
-                    JavaScript and SQL.
+                    I bring mechanical design and technical drafting experience to software development.
                 </p>
 
                 <div class="home-links">
@@ -56,10 +57,10 @@
         <section id="about">
             <div class="container">
                 <h2>About Me</h2>
-                <p>I'm a Software Engineering student based in New York City.</p>
+                <p>I'm a software engineering student with a background in mechatronics and professional CAD drafting, based in New York City.</p>
                 <div class="about-content">
-                    <p>I enjoy building practical software and learning how applications work from the ground up. My current focus is Python, JavaScript, SQL, web development and data structures and algorithms.</p>
-                    <p>Before focusing on software development, I worked in technical drafting and project coordination. That experience taught me how to work with technical documentation, solve real-world problems and manage projects from design through execution.</p>
+                    <p>At WGU, I'm studying software engineering and building projects with Python, JavaScript, SQL and web technologies.</p>
+                    <p>My drafting work includes shop drawings, fabrication documentation and design coordination. I like solving problems that connect physical systems, clear documentation and useful software.</p>
 
                 </div>
             </div>
@@ -68,7 +69,15 @@
         <section id="projects">
             <div class="container">
                 <div class="project">
-                    <h2>My Projects</h2>
+                    <h2>Selected Projects</h2>
+                    <p class="section-intro">Mechanical design, professional drafting and software built around practical problems.</p>
+                    <div class="project-filters" role="group" aria-label="Filter projects">
+                        <button type="button" class="filter-button active" data-filter="all" aria-pressed="true">All</button>
+                        <button type="button" class="filter-button" data-filter="engineering" aria-pressed="false">Engineering</button>
+                        <button type="button" class="filter-button" data-filter="software" aria-pressed="false">Software</button>
+                    </div>
+                    <p id="project-status" class="project-status" role="status" aria-live="polite"></p>
+                    <noscript><p>Engineering case studies: <a href="projects/robotic-arm.html">Robotic Arm</a>, <a href="projects/glass-enclosures.html">Glass Enclosures</a>, <a href="projects/metal-baffles.html">Metal Baffles</a>. Enable JavaScript to filter all projects.</p></noscript>
                     <ul id="project-list">
                     </ul>
                 </div>
@@ -94,7 +103,12 @@
 
                     <div class="skill-group">
                         <h3>Tools</h3>
-                        <p>Git, GitHub, GitLab, VS Code</p>
+                        <p>AutoCAD, Autodesk Inventor, Git, GitHub, GitLab, VS Code</p>
+                    </div>
+
+                    <div class="skill-group">
+                        <h3>Engineering</h3>
+                        <p>Mechanical design, shop drawings, fabrication details, technical coordination</p>
                     </div>
 
                 </div>
@@ -107,7 +121,7 @@
             <div class="container">
                 <h2>Contact</h2>
 
-                <p>I'm currently looking for opportunities in software development and other technology-focused roles.</p>
+                <p>I'm looking for opportunities in software development and technology roles where my engineering background can help.</p>
 
                 <p>Feel free to reach out if you'd like to connect or discuss an opportunity.</p>
 
@@ -137,6 +151,7 @@
             </div>
         </section>
          
+        </main>
         <footer class="footer"> 
             <div class="container"> 
                 <p>&copy; 2026 Kacper Popek. All rights reserved.</p> 
