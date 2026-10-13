@@ -594,3 +594,20 @@ section, #main { scroll-margin-top: calc(var(--header-height) + 18px); }
         transition: none;
     }
 }
+
+/* Robot canvas */
+#robot-container {
+    position: relative;
+}
+
+#robot-container canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+#robot-container .robot-placeholder {
+    position: absolute;
+    margin: 0;
+    pointer-events: none;
+}
