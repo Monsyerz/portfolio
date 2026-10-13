@@ -513,3 +513,84 @@ section, #main { scroll-margin-top: calc(var(--header-height) + 18px); }
 @media (prefers-reduced-motion: reduce) {
   body, header, .logo a { transition: none; }
 }
+
+
+/* Robot home layout */
+
+#home {
+    text-align: center;
+}
+
+#home .home-label {
+    max-width: none;
+}
+
+#home h1 {
+    font-size: clamp(40px, 6vw, 72px);
+}
+
+.robot-navigation {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items: center;
+    gap: 24px;
+    margin: 30px 0;
+}
+
+#robot-container {
+    width: 100%;
+    height: clamp(300px, 45vh, 500px);
+    min-width: 0;
+
+    display: grid;
+    place-items: center;
+}
+
+#home .robot-placeholder {
+    font-family: monospace;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.home-project-link,
+#about-button {
+    color: var(--text);
+    font-family: monospace;
+    font-size: 15px;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.home-project-link:hover,
+#about-button:hover {
+    color: var(--accent);
+}
+
+#about-button {
+    display: inline-block;
+    padding: 12px 18px;
+}
+
+@media (max-width: 650px) {
+    .robot-navigation {
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+    }
+
+    #robot-container {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        height: 320px;
+    }
+
+    .home-project-link {
+        font-size: 13px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-project-link,
+    #about-button {
+        transition: none;
+    }
+}
