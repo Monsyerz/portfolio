@@ -162,6 +162,9 @@ async function initRobot() {
 
         // Keep the model and joints available for the next commit.
         robotView = {
+            THREE,
+            camera,
+            container,
             model,
             render,
             joints: {
@@ -189,3 +192,163 @@ async function initRobot() {
 }
 
 initRobot();
+
+// Robot grab preview
+let robotBusy = false;
+
+function getRobotPose() {
+    const { model, joints } = robotView;
+
+    return {
+        x: model.position.x,
+        y: model.position.y,
+        turn: model.rotation.y,
+        shoulder: joints.shoulder.rotation.z,
+        support: joints.support.rotation.z,
+        wrist: joints.wrist.rotation.z,
+        lowerJaw: joints.lowerJaw.rotation.z,
+        upperJaw: joints.upperJaw.rotation.z
+    };
+}
+
+function applyRobotPose(pose) {
+    const { model, joints } = robotView;
+
+    model.position.x = pose.x;
+    model.position.y = pose.y;
+    model.rotation.y = pose.turn;
+    joints.shoulder.rotation.z = pose.shoulder;
+    joints.support.rotation.z = pose.support;
+    joints.wrist.rotation.z = pose.wrist;
+    joints.lowerJaw.rotation.z = pose.lowerJaw;
+    joints.upperJaw.rotation.z = pose.upperJaw;
+    model.updateMatrixWorld(true);
+}
+
+function animateRobotPose(target, duration = 700) {
+    const start = getRobotPose();
+    const startedAt = performance.now();
+
+    return new Promise(resolve => {
+        function frame(now) {
+            const progress = Math.min((now - startedAt) / duration, 1);
+            const eased = progress * progress * (3 - 2 * progress);
+            const pose = {};
+
+            for (const key of Object.keys(start)) {
+                pose[key] = start[key] + (target[key] - start[key]) * eased;
+            }
+
+            applyRobotPose(pose);
+            robotView.render();
+
+            if (progress < 1) {
+                requestAnimationFrame(frame);
+            } else {
+                resolve();
+            }
+        }
+
+        requestAnimationFrame(frame);
+    });
+}
+
+function getRobotContactPose(restingPose, edge) {
+    const { THREE, model, camera, container, joints } = robotView;
+
+    const target = {
+        ...restingPose,
+        turn: restingPose.turn - 0.3,
+        shoulder: restingPose.shoulder + 0.12,
+        support: restingPose.support - 0.2,
+        wrist: restingPose.wrist + 0.35
+    };
+
+    // Temporarily apply the target angles to measure the gripper.
+    applyRobotPose(target);
+    camera.updateMatrixWorld(true);
+
+    // Midpoint between the grip pads in this model.
+    const gripPoint = joints.wrist.localToWorld(
+        new THREE.Vector3(-1.24, 0, 0)
+    );
+
+    const projectedGrip = gripPoint.clone().project(camera);
+    const canvasRect = container.getBoundingClientRect();
+    const edgeRect = edge.getBoundingClientRect();
+
+    const screenX = edgeRect.left + edgeRect.width / 2;
+    const screenY = edgeRect.top + edgeRect.height / 2;
+
+    // Convert the edge position from screen pixels into the 3D scene.
+    const targetPoint = new THREE.Vector3(
+        ((screenX - canvasRect.left) / canvasRect.width) * 2 - 1,
+        -((screenY - canvasRect.top) / canvasRect.height) * 2 + 1,
+        projectedGrip.z
+    ).unproject(camera);
+
+    target.x += targetPoint.x - gripPoint.x;
+    target.y += targetPoint.y - gripPoint.y;
+
+    applyRobotPose(restingPose);
+    return target;
+}
+
+document.querySelector('#about-button')?.addEventListener(
+    'click',
+    async event => {
+        if (!robotView) return;
+
+        const { container, joints } = robotView;
+        if (Object.values(joints).some(joint => !joint)) return;
+
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            return;
+        }
+
+        event.preventDefault();
+        if (robotBusy) return;
+        robotBusy = true;
+
+        let edge = container.querySelector('.robot-grab-edge');
+
+        if (!edge) {
+            edge = document.createElement('div');
+            edge.className = 'robot-grab-edge';
+            edge.setAttribute('aria-hidden', 'true');
+            container.appendChild(edge);
+        }
+
+        const restingPose = getRobotPose();
+
+        try {
+            const contactPose = getRobotContactPose(restingPose, edge);
+
+            // Reach the measured edge before closing the fingers.
+            await animateRobotPose(contactPose, 850);
+
+            // A smaller angle keeps the grip pads from crossing.
+            await animateRobotPose({
+                ...contactPose,
+                lowerJaw: restingPose.lowerJaw + 0.1,
+                upperJaw: restingPose.upperJaw - 0.1
+            }, 300);
+
+            edge.classList.add('is-gripped');
+
+            // Briefly hold the grip so the contact is visible.
+            await new Promise(resolve => setTimeout(resolve, 450));
+
+            // Release first, then return.
+            await animateRobotPose(contactPose, 250);
+            edge.classList.remove('is-gripped');
+
+            await animateRobotPose(restingPose, 750);
+        } finally {
+            applyRobotPose(restingPose);
+            robotView.render();
+            edge.classList.remove('is-gripped');
+            robotBusy = false;
+        }
+    }
+);

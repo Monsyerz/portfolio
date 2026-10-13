@@ -611,3 +611,20 @@ section, #main { scroll-margin-top: calc(var(--header-height) + 18px); }
     margin: 0;
     pointer-events: none;
 }
+
+/* Edge used for the robot grab preview */
+.robot-grab-edge {
+    position: absolute;
+    left: 50%;
+    bottom: 32px;
+    width: 110px;
+    height: 2px;
+    transform: translateX(-50%);
+    background: var(--text-muted);
+    pointer-events: none;
+}
+
+.robot-grab-edge.is-gripped {
+    background: var(--accent);
+    box-shadow: 0 0 12px rgba(114, 214, 138, 0.5);
+}
