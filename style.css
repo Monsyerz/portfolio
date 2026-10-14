@@ -1281,3 +1281,16 @@ section p {
     }
 
 }
+
+.nav-paper {
+    padding: 18px 24px;
+
+    background: #f4f3ef;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+
+    transform-origin: center;
+
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease;
+}
