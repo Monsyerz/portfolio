@@ -278,7 +278,7 @@ function getRobotContactPose(restingPose, edge) {
     const edgeRect = edge.getBoundingClientRect();
 
     const screenX = edgeRect.left + edgeRect.width / 2;
-    const screenY = edgeRect.top + edgeRect.height / 2;
+    const screenY = edgeRect.top;
 
     // Convert the edge position from screen pixels into the 3D scene.
     const targetPoint = new THREE.Vector3(
@@ -324,6 +324,13 @@ document.querySelector('#about-button')?.addEventListener(
         try {
             const contactPose = getRobotContactPose(restingPose, edge);
 
+            const pulledPose = {
+            ...contactPose,
+            y: contactPose.y + 0.45,
+            shoulder: contactPose.shoulder - 0.08,
+            wrist: contactPose.wrist - 0.08
+            };
+
             // Reach the measured edge before closing the fingers.
             await animateRobotPose(contactPose, 850);
 
@@ -333,22 +340,33 @@ document.querySelector('#about-button')?.addEventListener(
                 lowerJaw: restingPose.lowerJaw + 0.1,
                 upperJaw: restingPose.upperJaw - 0.1
             }, 300);
-
             edge.classList.add('is-gripped');
 
             // Briefly hold the grip so the contact is visible.
-            await new Promise(resolve => setTimeout(resolve, 450));
+            await new Promise(resolve => setTimeout(resolve, 250));
+
+            edge.classList.add('is-pulled');
+
+            await animateRobotPose(pulledPose, 600);
 
             // Release first, then return.
+            edge.classList.remove('is-pulled');
+
             await animateRobotPose(contactPose, 250);
+
             edge.classList.remove('is-gripped');
 
             await animateRobotPose(restingPose, 750);
-        } finally {
-            applyRobotPose(restingPose);
-            robotView.render();
-            edge.classList.remove('is-gripped');
-            robotBusy = false;
-        }
+
+            } finally {
+                applyRobotPose(restingPose);
+                robotView.render();
+
+                edge.classList.remove('is-pulled');
+                edge.classList.remove('is-gripped');
+
+                robotBusy = false;
+            }
+ 
     }
 );

@@ -613,18 +613,33 @@ section, #main { scroll-margin-top: calc(var(--header-height) + 18px); }
 }
 
 /* Edge used for the robot grab preview */
+/* Edge used for the robot grab preview */
 .robot-grab-edge {
     position: absolute;
     left: 50%;
     bottom: 32px;
-    width: 110px;
-    height: 2px;
+
+    width: 180px;
+    height: 120px;
+
     transform: translateX(-50%);
-    background: var(--text-muted);
+    transform-origin: top center;
+
+    background: #f1eee7;
+
     pointer-events: none;
+
+    transition:
+        transform 0.45s ease,
+        box-shadow 0.3s ease;
 }
 
 .robot-grab-edge.is-gripped {
-    background: var(--accent);
+    transform: translateX(-50%) translateY(-8px) rotate(2deg);
+
     box-shadow: 0 0 12px rgba(114, 214, 138, 0.5);
+}
+
+.robot-grab-edge.is-pulled {
+    transform: translateX(-50%) translateY(-90px) rotate(8deg);
 }
