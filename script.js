@@ -357,6 +357,10 @@ document.querySelector('#about-button')?.addEventListener(
             edge.classList.remove('is-gripped');
 
             await animateRobotPose(restingPose, 750);
+            
+            document.querySelector('#about')?.scrollIntoView({
+            behavior: 'smooth'
+            });
 
             } finally {
                 applyRobotPose(restingPose);
