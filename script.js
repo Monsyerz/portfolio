@@ -352,7 +352,7 @@ async function initRobot() {
 
         const gltf =
             await loader.loadAsync(
-                'assets/projects/robotic-arm.glb'
+                'assets/projects/robotic-arm-v2.glb'
             );
 
 
