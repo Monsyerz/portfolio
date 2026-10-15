@@ -791,7 +791,7 @@ function animateRobotPose(
 
 function getRobotContactPose(
     restingPose,
-    paper
+    targetElement
 ) {
 
     const {
@@ -814,18 +814,6 @@ function getRobotContactPose(
     const target = {
 
         ...restingPose,
-
-        turn:
-            restingPose.turn - 0.3,
-
-        shoulder:
-            restingPose.shoulder + 0.12,
-
-        support:
-            restingPose.support - 0.2,
-
-        wrist:
-            restingPose.wrist + 0.35
 
     };
 
@@ -870,23 +858,16 @@ function getRobotContactPose(
         container.getBoundingClientRect();
 
 
-    const paperRect =
-        paper.getBoundingClientRect();
+    const targetRect =
+        targetElement.getBoundingClientRect();
 
 
 
-    /*
-        Target the CENTER of the
-        TOP edge of the paper.
-    */
-
-    const screenX =
-        paperRect.left +
-        paperRect.width / 2;
-
+    const screenX = targetRect.right;
 
     const screenY =
-        paperRect.top;
+        targetRect.top +
+        targetRect.height / 2;
 
 
 
@@ -932,11 +913,6 @@ function getRobotContactPose(
     target.x +=
         targetPoint.x -
         gripPoint.x;
-
-
-    target.y +=
-        targetPoint.y -
-        gripPoint.y;
 
 
 
@@ -1047,37 +1023,8 @@ aboutButton?.addEventListener(
             when the interaction starts.
         */
 
-        let paper =
-            container.querySelector(
-                '.robot-grab-edge'
-            );
-
-
-        if (!paper) {
-
-            paper =
-                document.createElement(
-                    'div'
-                );
-
-
-            paper.className =
-                'robot-grab-edge';
-
-
-            paper.setAttribute(
-                'aria-hidden',
-                'true'
-            );
-
-
-            container.appendChild(
-                paper
-            );
-
-        }
-
-
+       
+        const paper=aboutButton;
 
         const restingPose =
             getRobotPose();
@@ -1107,18 +1054,6 @@ aboutButton?.addEventListener(
             const pulledPose = {
 
                 ...contactPose,
-
-                y:
-                    contactPose.y +
-                    0.45,
-
-                shoulder:
-                    contactPose.shoulder -
-                    0.08,
-
-                wrist:
-                    contactPose.wrist -
-                    0.08
 
             };
 

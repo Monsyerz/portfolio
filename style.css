@@ -360,13 +360,15 @@ section p {
 /* ROBOT NAVIGATION */
 
 .robot-navigation {
+    position: relative;
+
     display: grid;
-
     grid-template-columns: 1fr 2.1fr 1fr;
-
     align-items: center;
 
     gap: 25px;
+
+    height: clamp(320px, 46vh, 510px);
 
     margin-top: 25px;
 }
@@ -375,16 +377,19 @@ section p {
 /* ROBOT  */
 
 #robot-container {
-    position: relative;
+    position: absolute;
+
+    inset: 0;
 
     display: grid;
-
     place-items: center;
 
     width: 100%;
-    height: clamp(320px, 46vh, 510px);
+    height: 100%;
 
-    min-width: 0;
+    z-index: 2;
+
+    pointer-events: none;
 }
 
 #robot-container canvas {
@@ -432,11 +437,27 @@ section p {
 }
 
 .home-nav-left {
+    grid-column: 1;
+
     justify-self: end;
+    align-self: end;
+
+    margin-bottom: 55px;
+
+    position: relative;
+    z-index: 3;
 }
 
 .home-nav-right {
+    grid-column: 3;
+
     justify-self: start;
+    align-self: end;
+
+    margin-bottom: 55px;
+
+    position: relative;
+    z-index: 3;
 }
 
 .home-project-link:hover {
@@ -1293,4 +1314,15 @@ section p {
     transition:
         transform 0.35s ease,
         box-shadow 0.35s ease;
+}
+
+.nav-paper.is-gripped {
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.14);
+}
+
+.nav-paper.is-pulled {
+    transform:
+        translateY(-18px)
+        rotate(-1deg);
 }
