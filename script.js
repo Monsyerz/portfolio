@@ -1,27 +1,26 @@
-/* KACPER POPEK — PORTFOLIO */
-
-
-/* GLOBAL ELEMENTS */
-
 const root = document.documentElement;
 const header = document.querySelector('header');
 
 
-
-/* 
-   HEADER HEIGHT
-   Keeps section offsets synced with the sticky header. */
+/*
+    Keeps the CSS header height
+    matched with the real header.
+*/
 
 function updateHeaderHeight() {
 
-    if (!header) return;
+    if (!header) {
+        return;
+    }
 
-    const height = header.getBoundingClientRect().height;
+    const height =
+        header.getBoundingClientRect().height;
 
     root.style.setProperty(
         '--header-height',
         `${height}px`
     );
+
 }
 
 
@@ -30,19 +29,27 @@ window.addEventListener(
     updateHeaderHeight
 );
 
+
 window.addEventListener(
     'load',
     updateHeaderHeight
 );
 
 
-if ('ResizeObserver' in window && header) {
+if (
+    'ResizeObserver' in window &&
+    header
+) {
 
-    const headerObserver = new ResizeObserver(
-        updateHeaderHeight
+    const headerObserver =
+        new ResizeObserver(
+            updateHeaderHeight
+        );
+
+    headerObserver.observe(
+        header
     );
 
-    headerObserver.observe(header);
 }
 
 
@@ -50,9 +57,10 @@ updateHeaderHeight();
 
 
 
-/* 
-   PROJECT FILTERS
-   Used on projects.html */
+/*
+    Filters projects by category
+    on projects.html.
+*/
 
 const projectCards = [
     ...document.querySelectorAll(
@@ -60,8 +68,12 @@ const projectCards = [
     )
 ];
 
+
 const projectFilters =
-    document.querySelector('.project-filters');
+    document.querySelector(
+        '.project-filters'
+    );
+
 
 const filterButtons = [
     ...document.querySelectorAll(
@@ -69,8 +81,11 @@ const filterButtons = [
     )
 ];
 
+
 const projectStatus =
-    document.querySelector('#project-status');
+    document.querySelector(
+        '#project-status'
+    );
 
 
 function filterProjects(filter) {
@@ -83,15 +98,20 @@ function filterProjects(filter) {
         const category =
             card.dataset.category;
 
+
         const shouldHide =
             filter !== 'all' &&
             category !== filter;
 
-        card.hidden = shouldHide;
+
+        card.hidden =
+            shouldHide;
 
 
         if (!shouldHide) {
+
             visibleProjects += 1;
+
         }
 
     });
@@ -100,12 +120,15 @@ function filterProjects(filter) {
     filterButtons.forEach(button => {
 
         const active =
-            button.dataset.filter === filter;
+            button.dataset.filter ===
+            filter;
+
 
         button.classList.toggle(
             'active',
             active
         );
+
 
         button.setAttribute(
             'aria-pressed',
@@ -148,23 +171,24 @@ if (
 
     filterProjects('all');
 
-    projectFilters.hidden = false;
+    projectFilters.hidden =
+        false;
+
 }
 
 
 
-/* 
-   ROBOT
-   Only runs on index.html when #robot-container exists. */
-
-let robotView = null;
-let robotBusy = false;
-
+/*
+    Loads and displays the robotic arm
+    only on the home page.
+*/
 
 async function initRobot() {
 
     const container =
-        document.querySelector('#robot-container');
+        document.querySelector(
+            '#robot-container'
+        );
 
 
     if (!container) {
@@ -182,6 +206,7 @@ async function initRobot() {
 
         placeholder.textContent =
             'Loading robotic arm...';
+
 
         placeholder.setAttribute(
             'role',
@@ -209,8 +234,6 @@ async function initRobot() {
 
         ]);
 
-
-        /*  SCENE  */
 
         const scene =
             new THREE.Scene();
@@ -261,7 +284,10 @@ async function initRobot() {
 
 
 
-        /*  CANVAS  */
+        /*
+            Creates the transparent
+            Three.js canvas.
+        */
 
         const canvas =
             renderer.domElement;
@@ -275,15 +301,19 @@ async function initRobot() {
 
         canvas.setAttribute(
             'aria-label',
-            'Interactive 3D robotic arm'
+            'Interactive robotic arm'
         );
 
 
-        container.appendChild(canvas);
+        container.appendChild(
+            canvas
+        );
 
 
 
-        /*  LIGHTS  */
+        /*
+            Adds lighting to the model.
+        */
 
         const hemisphereLight =
             new THREE.HemisphereLight(
@@ -337,7 +367,9 @@ async function initRobot() {
 
 
 
-        /*  LOAD MODEL  */
+        /*
+            Loads the robotic arm model.
+        */
 
         const loader =
             new GLTFLoader();
@@ -357,15 +389,22 @@ async function initRobot() {
             Math.PI / 2;
 
 
-        model.updateMatrixWorld(true);
+        model.updateMatrixWorld(
+            true
+        );
 
 
 
-        /*  CENTER MODEL  */
+        /*
+            Centers the model inside
+            the Three.js scene.
+        */
 
         const bounds =
             new THREE.Box3()
-                .setFromObject(model);
+                .setFromObject(
+                    model
+                );
 
 
         const center =
@@ -380,14 +419,21 @@ async function initRobot() {
             );
 
 
-        model.position.sub(center);
+        model.position.sub(
+            center
+        );
 
 
-        scene.add(model);
+        scene.add(
+            model
+        );
 
 
 
-        /*  RENDER  */
+        /*
+            Renders the current
+            robot scene.
+        */
 
         function render() {
 
@@ -400,18 +446,25 @@ async function initRobot() {
 
 
 
-        /*  RESPONSIVE CANVAS  */
+        /*
+            Keeps the robot fitted
+            inside its container.
+        */
 
         function resizeRobot() {
 
             const width =
                 container.clientWidth;
 
+
             const height =
                 container.clientHeight;
 
 
-            if (!width || !height) {
+            if (
+                !width ||
+                !height
+            ) {
                 return;
             }
 
@@ -504,7 +557,6 @@ async function initRobot() {
         }
 
 
-
         const robotResizeObserver =
             new ResizeObserver(
                 resizeRobot
@@ -514,58 +566,6 @@ async function initRobot() {
         robotResizeObserver.observe(
             container
         );
-
-
-
-        /*  SAVE ROBOT REFERENCES  */
-
-        robotView = {
-
-            THREE,
-
-            camera,
-
-            container,
-
-            model,
-
-            render,
-
-            joints: {
-
-                base:
-                    model.getObjectByName(
-                        'J0_Base'
-                    ),
-
-                shoulder:
-                    model.getObjectByName(
-                        'J3_Shoulder'
-                    ),
-
-                support:
-                    model.getObjectByName(
-                        'J4_Tool_support'
-                    ),
-
-                wrist:
-                    model.getObjectByName(
-                        'J5_Camera'
-                    ),
-
-                lowerJaw:
-                    model.getObjectByName(
-                        'Lower_jaw'
-                    ),
-
-                upperJaw:
-                    model.getObjectByName(
-                        'Upper_jaw'
-                    )
-
-            }
-
-        };
 
 
         resizeRobot();
@@ -602,536 +602,3 @@ async function initRobot() {
 
 
 initRobot();
-
-
-
-/* ROBOT POSES */
-
-function getRobotPose() {
-
-    const {
-        model,
-        joints
-    } = robotView;
-
-
-    return {
-
-        x:
-            model.position.x,
-
-        y:
-            model.position.y,
-
-        turn:
-            model.rotation.y,
-
-        shoulder:
-            joints.shoulder.rotation.z,
-
-        support:
-            joints.support.rotation.z,
-
-        wrist:
-            joints.wrist.rotation.z,
-
-        lowerJaw:
-            joints.lowerJaw.rotation.z,
-
-        upperJaw:
-            joints.upperJaw.rotation.z
-
-    };
-
-}
-
-
-
-function applyRobotPose(pose) {
-
-    const {
-        model,
-        joints
-    } = robotView;
-
-
-    model.position.x =
-        pose.x;
-
-    model.position.y =
-        pose.y;
-
-    model.rotation.y =
-        pose.turn;
-
-
-    joints.shoulder.rotation.z =
-        pose.shoulder;
-
-    joints.support.rotation.z =
-        pose.support;
-
-    joints.wrist.rotation.z =
-        pose.wrist;
-
-    joints.lowerJaw.rotation.z =
-        pose.lowerJaw;
-
-    joints.upperJaw.rotation.z =
-        pose.upperJaw;
-
-
-    model.updateMatrixWorld(true);
-
-}
-
-
-
-/* ROBOT ANIMATION */
-
-function animateRobotPose(
-    target,
-    duration = 700
-) {
-
-    const start =
-        getRobotPose();
-
-
-    const startedAt =
-        performance.now();
-
-
-    return new Promise(resolve => {
-
-
-        function frame(now) {
-
-            const progress =
-                Math.min(
-
-                    (now - startedAt) /
-                    duration,
-
-                    1
-
-                );
-
-
-            /*
-                Smoothstep easing.
-
-                Similar idea to interpolation:
-                start → middle → target
-            */
-
-            const eased =
-                progress *
-                progress *
-                (
-                    3 -
-                    2 * progress
-                );
-
-
-            const pose = {};
-
-
-            for (
-                const key
-                of Object.keys(start)
-            ) {
-
-                pose[key] =
-                    start[key] +
-
-                    (
-                        target[key] -
-                        start[key]
-                    ) *
-
-                    eased;
-
-            }
-
-
-            applyRobotPose(pose);
-
-            robotView.render();
-
-
-            if (progress < 1) {
-
-                requestAnimationFrame(
-                    frame
-                );
-
-            }
-
-            else {
-
-                resolve();
-
-            }
-
-        }
-
-
-        requestAnimationFrame(
-            frame
-        );
-
-    });
-
-}
-
-
-
-/* FIND PAPER CONTACT POSITION */
-
-function getRobotContactPose(
-    restingPose,
-    targetElement,
-    edge
-) {
-
-    const {
-
-        THREE,
-        model,
-        camera,
-        container,
-        joints
-
-    } = robotView;
-
-
-
-    /*
-        Start with a pose that moves
-        the arm toward the paper.
-    */
-
-    const target = {
-
-        ...restingPose,
-
-    };
-
-
-
-    /*
-        Temporarily position the robot
-        so we can measure the gripper.
-    */
-
-    applyRobotPose(target);
-
-    camera.updateMatrixWorld(true);
-
-
-
-    /*
-        Approximate center point
-        between the gripper pads.
-    */
-
-    const gripPoint =
-        joints.wrist.localToWorld(
-
-            new THREE.Vector3(
-                -1.24,
-                0,
-                0
-            )
-
-        );
-
-
-
-    const projectedGrip =
-        gripPoint
-            .clone()
-            .project(camera);
-
-
-    const canvasRect =
-        container.getBoundingClientRect();
-
-
-    const targetRect =
-        targetElement.getBoundingClientRect();
-
-
-
-    const screenX = 
-        edge==='left'
-            ? targetRect.left
-            : targetRect.right;
-
-    const screenY =
-        targetRect.top +
-        targetRect.height / 2;
-
-
-
-    /*
-        Convert browser screen
-        coordinates into Three.js
-        world coordinates.
-    */
-
-    const targetPoint =
-        new THREE.Vector3(
-
-            (
-                (
-                    screenX -
-                    canvasRect.left
-                ) /
-
-                canvasRect.width
-
-            ) * 2 - 1,
-
-
-            -(
-
-                (
-                    screenY -
-                    canvasRect.top
-                ) /
-
-                canvasRect.height
-
-            ) * 2 + 1,
-
-
-            projectedGrip.z
-
-        )
-        .unproject(camera);
-
-
-
-    target.x +=
-        targetPoint.x -
-        gripPoint.x;
-
-
-
-    /*
-        Restore the robot before
-        returning the calculated pose.
-    */
-
-    applyRobotPose(
-        restingPose
-    );
-
-
-    return target;
-
-}
-
-
-
-/* ABOUT ME — PAPER GRAB */
-
-/* ROBOT NAVIGATION */
-
-const aboutButton =
-    document.querySelector('#about-button');
-
-const projectsButton =
-    document.querySelector('#projects-button');
-
-
-function setupRobotGrab(
-    button,
-    edge,
-    pullAmount
-) {
-
-    button?.addEventListener(
-        'click',
-        async event => {
-
-            if (!robotView) {
-                return;
-            }
-
-
-            if (
-                window.matchMedia(
-                    '(prefers-reduced-motion: reduce)'
-                ).matches
-            ) {
-                return;
-            }
-
-
-            const { joints } =
-                robotView;
-
-
-            if (
-                Object
-                    .values(joints)
-                    .some(joint => !joint)
-            ) {
-                return;
-            }
-
-
-            event.preventDefault();
-
-
-            if (robotBusy) {
-                return;
-            }
-
-
-            robotBusy = true;
-
-
-            const destination =
-                button.href;
-
-            const paper =
-                button;
-
-            const restingPose =
-                getRobotPose();
-
-
-            try {
-
-                const contactPose =
-                    getRobotContactPose(
-                        restingPose,
-                        paper,
-                        edge
-                    );
-
-
-                const pulledPose = {
-
-                    ...contactPose,
-
-                    x:
-                        contactPose.x +
-                        pullAmount
-
-                };
-
-
-                /* MOVE TO CARD */
-
-                await animateRobotPose(
-                    contactPose,
-                    850
-                );
-
-
-                /* CLOSE GRIPPER */
-
-                await animateRobotPose(
-                    {
-
-                        ...contactPose,
-
-                        lowerJaw:
-                            restingPose.lowerJaw +
-                            0.1,
-
-                        upperJaw:
-                            restingPose.upperJaw -
-                            0.1
-
-                    },
-
-                    300
-                );
-
-
-                paper.classList.add(
-                    'is-gripped'
-                );
-
-
-                await new Promise(
-                    resolve =>
-                        setTimeout(
-                            resolve,
-                            250
-                        )
-                );
-
-
-                /* PULL CARD */
-
-                paper.classList.add(
-                    'is-pulled'
-                );
-
-
-                await animateRobotPose(
-                    pulledPose,
-                    600
-                );
-
-
-                window.location.href =
-                    destination;
-
-            }
-
-
-            finally {
-
-                applyRobotPose(
-                    restingPose
-                );
-
-
-                robotView.render();
-
-
-                paper.classList.remove(
-                    'is-pulled'
-                );
-
-
-                paper.classList.remove(
-                    'is-gripped'
-                );
-
-
-                robotBusy = false;
-
-            }
-
-        }
-
-    );
-
-}
-
-
-/* ABOUT — grab from the right edge */
-
-setupRobotGrab(
-    aboutButton,
-    'right',
-    0.25
-);
-
-
-/* PROJECTS — grab from the left edge */
-
-setupRobotGrab(
-    projectsButton,
-    'left',
-    -0.25
-);
