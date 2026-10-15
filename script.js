@@ -1,6 +1,9 @@
 const root = document.documentElement;
 const header = document.querySelector('header');
 
+let robotView = null;
+let robotBusy = false;
+
 
 /*
     Keeps the CSS header height
@@ -13,12 +16,9 @@ function updateHeaderHeight() {
         return;
     }
 
-    const height =
-        header.getBoundingClientRect().height;
-
     root.style.setProperty(
         '--header-height',
-        `${height}px`
+        `${header.getBoundingClientRect().height}px`
     );
 
 }
@@ -41,12 +41,12 @@ if (
     header
 ) {
 
-    const headerObserver =
+    const observer =
         new ResizeObserver(
             updateHeaderHeight
         );
 
-    headerObserver.observe(
+    observer.observe(
         header
     );
 
@@ -95,13 +95,9 @@ function filterProjects(filter) {
 
     projectCards.forEach(card => {
 
-        const category =
-            card.dataset.category;
-
-
         const shouldHide =
             filter !== 'all' &&
-            category !== filter;
+            card.dataset.category !== filter;
 
 
         card.hidden =
@@ -120,8 +116,7 @@ function filterProjects(filter) {
     filterButtons.forEach(button => {
 
         const active =
-            button.dataset.filter ===
-            filter;
+            button.dataset.filter === filter;
 
 
         button.classList.toggle(
@@ -171,15 +166,14 @@ if (
 
     filterProjects('all');
 
-    projectFilters.hidden =
-        false;
+    projectFilters.hidden = false;
 
 }
 
 
 
 /*
-    Loads and displays the robotic arm
+    Loads the robotic arm
     only on the home page.
 */
 
@@ -200,20 +194,6 @@ async function initRobot() {
         container.querySelector(
             '.robot-placeholder'
         );
-
-
-    if (placeholder) {
-
-        placeholder.textContent =
-            'Loading robotic arm...';
-
-
-        placeholder.setAttribute(
-            'role',
-            'status'
-        );
-
-    }
 
 
     let renderer;
@@ -283,12 +263,6 @@ async function initRobot() {
             1.2;
 
 
-
-        /*
-            Creates the transparent
-            Three.js canvas.
-        */
-
         const canvas =
             renderer.domElement;
 
@@ -312,7 +286,8 @@ async function initRobot() {
 
 
         /*
-            Adds lighting to the model.
+            Adds lights
+            to the scene.
         */
 
         const hemisphereLight =
@@ -368,7 +343,7 @@ async function initRobot() {
 
 
         /*
-            Loads the robotic arm model.
+            Loads the robot model.
         */
 
         const loader =
@@ -393,12 +368,6 @@ async function initRobot() {
             true
         );
 
-
-
-        /*
-            Centers the model inside
-            the Three.js scene.
-        */
 
         const bounds =
             new THREE.Box3()
@@ -431,8 +400,7 @@ async function initRobot() {
 
 
         /*
-            Renders the current
-            robot scene.
+            Renders the robot.
         */
 
         function render() {
@@ -448,7 +416,7 @@ async function initRobot() {
 
         /*
             Keeps the robot fitted
-            inside its container.
+            inside the container.
         */
 
         function resizeRobot() {
@@ -527,12 +495,9 @@ async function initRobot() {
 
             camera.far =
                 Math.max(
-
                     100,
-
                     distance +
                     size.length() * 4
-
                 );
 
 
@@ -557,15 +522,59 @@ async function initRobot() {
         }
 
 
-        const robotResizeObserver =
+        const resizeObserver =
             new ResizeObserver(
                 resizeRobot
             );
 
 
-        robotResizeObserver.observe(
+        resizeObserver.observe(
             container
         );
+
+
+        robotView = {
+
+            THREE,
+
+            camera,
+
+            container,
+
+            model,
+
+            render,
+
+            joints: {
+
+                shoulder:
+                    model.getObjectByName(
+                        'J3_Shoulder'
+                    ),
+
+                support:
+                    model.getObjectByName(
+                        'J4_Tool_support'
+                    ),
+
+                wrist:
+                    model.getObjectByName(
+                        'J5_Camera'
+                    ),
+
+                lowerJaw:
+                    model.getObjectByName(
+                        'Lower_jaw'
+                    ),
+
+                upperJaw:
+                    model.getObjectByName(
+                        'Upper_jaw'
+                    )
+
+            }
+
+        };
 
 
         resizeRobot();
@@ -592,7 +601,7 @@ async function initRobot() {
 
 
         console.error(
-            'Could not load the robotic arm:',
+            'Could not load robotic arm:',
             error
         );
 
@@ -602,3 +611,829 @@ async function initRobot() {
 
 
 initRobot();
+
+
+
+/*
+    Reads all arm joints
+    used by the animation.
+*/
+
+function getArmPose() {
+
+    const { joints } =
+        robotView;
+
+
+    return {
+
+        shoulderY:
+            joints.shoulder.rotation.y,
+
+        shoulderZ:
+            joints.shoulder.rotation.z,
+
+        supportY:
+            joints.support.rotation.y,
+
+        supportZ:
+            joints.support.rotation.z,
+
+        wristY:
+            joints.wrist.rotation.y,
+
+        wristZ:
+            joints.wrist.rotation.z,
+
+        lowerJaw:
+            joints.lowerJaw.rotation.z,
+
+        upperJaw:
+            joints.upperJaw.rotation.z
+
+    };
+
+}
+
+
+
+/*
+    Applies a position
+    to the robot arm.
+
+    The robot base
+    never moves.
+*/
+
+function applyArmPose(pose) {
+
+    const {
+        model,
+        joints
+    } = robotView;
+
+
+    joints.shoulder.rotation.y =
+        pose.shoulderY;
+
+
+    joints.shoulder.rotation.z =
+        pose.shoulderZ;
+
+
+    joints.support.rotation.y =
+        pose.supportY;
+
+
+    joints.support.rotation.z =
+        pose.supportZ;
+
+
+    joints.wrist.rotation.y =
+        pose.wristY;
+
+
+    joints.wrist.rotation.z =
+        pose.wristZ;
+
+
+    joints.lowerJaw.rotation.z =
+        pose.lowerJaw;
+
+
+    joints.upperJaw.rotation.z =
+        pose.upperJaw;
+
+
+    model.updateMatrixWorld(
+        true
+    );
+
+}
+
+
+
+/*
+    Smoothly moves the arm
+    between two positions.
+*/
+
+function animateArmPose(
+    target,
+    duration = 700,
+    onFrame = null
+) {
+
+    const start =
+        getArmPose();
+
+
+    const startTime =
+        performance.now();
+
+
+    return new Promise(resolve => {
+
+
+        function frame(now) {
+
+            const progress =
+                Math.min(
+                    (now - startTime) /
+                    duration,
+                    1
+                );
+
+
+            const eased =
+                progress *
+                progress *
+                (
+                    3 -
+                    2 * progress
+                );
+
+
+            const pose = {};
+
+
+            for (
+                const key
+                of Object.keys(start)
+            ) {
+
+                pose[key] =
+                    start[key] +
+
+                    (
+                        target[key] -
+                        start[key]
+                    ) *
+
+                    eased;
+
+            }
+
+
+            applyArmPose(
+                pose
+            );
+
+
+            if (onFrame) {
+
+                onFrame(
+                    eased
+                );
+
+            }
+
+
+            robotView.render();
+
+
+            if (
+                progress < 1
+            ) {
+
+                requestAnimationFrame(
+                    frame
+                );
+
+            }
+
+            else {
+
+                resolve();
+
+            }
+
+        }
+
+
+        requestAnimationFrame(
+            frame
+        );
+
+    });
+
+}
+
+
+
+/*
+    Creates the arm position
+    for the selected corner.
+
+    Shoulder stays fixed.
+*/
+
+function createReachPose(
+    restingPose,
+    side
+) {
+
+    if (
+        side === 'left'
+    ) {
+
+        return {
+
+            ...restingPose,
+
+            shoulderY:
+                restingPose.shoulderY,
+
+            shoulderZ:
+                restingPose.shoulderZ,
+
+            supportY:
+                restingPose.supportY -
+                0.95,
+
+            supportZ:
+                restingPose.supportZ +
+                0.18,
+
+            wristY:
+                restingPose.wristY +
+                0.7,
+
+            wristZ:
+                restingPose.wristZ -
+                0.16
+
+        };
+
+    }
+
+
+    return {
+
+        ...restingPose,
+
+        shoulderY:
+            restingPose.shoulderY,
+
+        shoulderZ:
+            restingPose.shoulderZ,
+
+        supportY:
+            restingPose.supportY +
+            0.95,
+
+        supportZ:
+            restingPose.supportZ +
+            0.18,
+
+        wristY:
+            restingPose.wristY -
+            0.7,
+
+        wristZ:
+            restingPose.wristZ -
+            0.16
+
+    };
+
+}
+
+
+
+/*
+    Closes the gripper
+    around the page.
+*/
+
+function createGrabPose(pose) {
+
+    return {
+
+        ...pose,
+
+        lowerJaw:
+            pose.lowerJaw +
+            0.1,
+
+        upperJaw:
+            pose.upperJaw -
+            0.1
+
+    };
+
+}
+
+
+
+/*
+    Pulls the arm back
+    toward the center.
+
+    Gripper remains closed.
+*/
+
+function createPullPose(
+    restingPose,
+    grabPose,
+    side
+) {
+
+    if (
+        side === 'left'
+    ) {
+
+        return {
+
+            ...restingPose,
+
+            shoulderY:
+                restingPose.shoulderY,
+
+            shoulderZ:
+                restingPose.shoulderZ,
+
+            supportY:
+                restingPose.supportY -
+                0.22,
+
+            supportZ:
+                restingPose.supportZ +
+                0.05,
+
+            wristY:
+                restingPose.wristY +
+                0.15,
+
+            wristZ:
+                restingPose.wristZ -
+                0.04,
+
+            lowerJaw:
+                grabPose.lowerJaw,
+
+            upperJaw:
+                grabPose.upperJaw
+
+        };
+
+    }
+
+
+    return {
+
+        ...restingPose,
+
+        shoulderY:
+            restingPose.shoulderY,
+
+        shoulderZ:
+            restingPose.shoulderZ,
+
+        supportY:
+            restingPose.supportY +
+            0.22,
+
+        supportZ:
+            restingPose.supportZ +
+            0.05,
+
+        wristY:
+            restingPose.wristY -
+            0.15,
+
+        wristZ:
+            restingPose.wristZ -
+            0.04,
+
+        lowerJaw:
+            grabPose.lowerJaw,
+
+        upperJaw:
+            grabPose.upperJaw
+
+    };
+
+}
+
+
+
+/*
+    Opens the gripper
+    after the pull.
+*/
+
+function createReleasePose(
+    pose,
+    restingPose
+) {
+
+    return {
+
+        ...pose,
+
+        lowerJaw:
+            restingPose.lowerJaw,
+
+        upperJaw:
+            restingPose.upperJaw
+
+    };
+
+}
+
+
+
+/*
+    Keeps the selected
+    corner visible.
+*/
+
+function lockCorner(edge) {
+
+    edge.classList.add(
+        'is-open'
+    );
+
+
+    edge.style.transition =
+        'none';
+
+
+    edge.style.transform =
+        'translate(0, 0)';
+
+
+    edge.style.zIndex =
+        '6000';
+
+}
+
+
+
+/*
+    Pulls the page inward
+    together with the arm.
+*/
+
+function pullPageWithArm(
+    edge,
+    pullPose
+) {
+
+    const startWidth =
+        edge.getBoundingClientRect().width;
+
+
+    const targetWidth =
+        window.innerWidth *
+        0.55;
+
+
+    return animateArmPose(
+        pullPose,
+        850,
+        progress => {
+
+            const width =
+                startWidth +
+
+                (
+                    targetWidth -
+                    startWidth
+                ) *
+
+                progress;
+
+
+            edge.style.width =
+                `${width}px`;
+
+        }
+    );
+
+}
+
+
+
+/*
+    Fades the corner label
+    before the page opens.
+*/
+
+function fadeCornerLabel(edge) {
+
+    edge
+        .querySelectorAll('span')
+        .forEach(element => {
+
+            element.animate(
+                [
+                    {
+                        opacity: 1
+                    },
+
+                    {
+                        opacity: 0
+                    }
+                ],
+                {
+                    duration: 180,
+                    fill: 'forwards'
+                }
+            );
+
+        });
+
+}
+
+
+
+/*
+    Expands the selected page
+    over the entire screen.
+*/
+
+function openFullPage(
+    edge,
+    restingPose
+) {
+
+    fadeCornerLabel(
+        edge
+    );
+
+
+    edge.style.zIndex =
+        '6000';
+
+
+    const rect =
+        edge.getBoundingClientRect();
+
+
+    const pageAnimation =
+        edge.animate(
+            [
+                {
+                    width:
+                        `${rect.width}px`,
+
+                    height:
+                        `${rect.height}px`
+                },
+
+                {
+                    width:
+                        '100vw',
+
+                    height:
+                        '100vh'
+                }
+            ],
+            {
+                duration: 600,
+
+                easing:
+                    'cubic-bezier(0.76, 0, 0.24, 1)',
+
+                fill:
+                    'forwards'
+            }
+        );
+
+
+    const robotAnimation =
+        animateArmPose(
+            restingPose,
+            500
+        );
+
+
+    return Promise.all([
+
+        pageAnimation.finished,
+
+        robotAnimation
+
+    ]);
+
+}
+
+
+
+/*
+    Runs the corner
+    page transition.
+*/
+
+function setupCornerGrab(
+    edge,
+    side
+) {
+
+    edge?.addEventListener(
+        'click',
+        async event => {
+
+
+            if (!robotView) {
+                return;
+            }
+
+
+            if (
+                window.matchMedia(
+                    '(prefers-reduced-motion: reduce)'
+                ).matches
+            ) {
+                return;
+            }
+
+
+            event.preventDefault();
+
+
+            if (robotBusy) {
+                return;
+            }
+
+
+            const { joints } =
+                robotView;
+
+
+            if (
+                Object
+                    .values(joints)
+                    .some(
+                        joint => !joint
+                    )
+            ) {
+                return;
+            }
+
+
+            robotBusy =
+                true;
+
+
+            const destination =
+                edge.href;
+
+
+            const restingPose =
+                getArmPose();
+
+
+            try {
+
+                lockCorner(
+                    edge
+                );
+
+
+                robotView.container.style.zIndex =
+                    '5000';
+
+
+
+                /*
+                    Arm reaches toward
+                    the selected corner.
+                */
+
+                const reachPose =
+                    createReachPose(
+                        restingPose,
+                        side
+                    );
+
+
+                await animateArmPose(
+                    reachPose,
+                    650
+                );
+
+
+
+                /*
+                    Gripper closes
+                    around the page.
+                */
+
+                const grabPose =
+                    createGrabPose(
+                        reachPose
+                    );
+
+
+                await animateArmPose(
+                    grabPose,
+                    170
+                );
+                edge.style.zIndex =
+                '6000';
+
+
+                /*
+                    Arm retracts while
+                    dragging the page.
+                */
+
+                const pullPose =
+                    createPullPose(
+                        restingPose,
+                        grabPose,
+                        side
+                    );
+
+
+                await pullPageWithArm(
+                    edge,
+                    pullPose
+                );
+
+
+
+                /*
+                    Gripper releases
+                    the page.
+                */
+
+                const releasePose =
+                    createReleasePose(
+                        pullPose,
+                        restingPose
+                    );
+
+
+                await animateArmPose(
+                    releasePose,
+                    160
+                );
+
+
+
+                /*
+                    Page covers
+                    the viewport.
+                */
+
+                await openFullPage(
+                    edge,
+                    restingPose
+                );
+
+
+                window.location.href =
+                    destination;
+
+            }
+
+
+            catch (error) {
+
+                console.error(
+                    'Could not run page transition:',
+                    error
+                );
+
+
+                robotBusy =
+                    false;
+
+
+                window.location.href =
+                    destination;
+
+            }
+
+        }
+
+    );
+
+}
+
+
+const projectsEdge =
+    document.querySelector(
+        '#projects-edge'
+    );
+
+
+const aboutEdge =
+    document.querySelector(
+        '#about-edge'
+    );
+
+
+setupCornerGrab(
+    projectsEdge,
+    'left'
+);
+
+
+setupCornerGrab(
+    aboutEdge,
+    'right'
+);
