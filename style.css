@@ -1321,8 +1321,14 @@ section p {
         0 10px 30px rgba(0, 0, 0, 0.14);
 }
 
-.nav-paper.is-pulled {
+.home-nav-left.is-pulled {
     transform:
-        translateY(-18px)
+        translateX(18px)
         rotate(-1deg);
+}
+
+.home-nav-right.is-pulled {
+    transform:
+        translateX(-18px)
+        rotate(1deg);
 }

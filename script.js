@@ -791,7 +791,8 @@ function animateRobotPose(
 
 function getRobotContactPose(
     restingPose,
-    targetElement
+    targetElement,
+    edge
 ) {
 
     const {
@@ -863,7 +864,10 @@ function getRobotContactPose(
 
 
 
-    const screenX = targetRect.right;
+    const screenX = 
+        edge==='left'
+            ? targetRect.left
+            : targetRect.right;
 
     const screenY =
         targetRect.top +
@@ -934,272 +938,200 @@ function getRobotContactPose(
 
 /* ABOUT ME — PAPER GRAB */
 
+/* ROBOT NAVIGATION */
+
 const aboutButton =
-    document.querySelector(
-        '#about-button'
-    );
+    document.querySelector('#about-button');
+
+const projectsButton =
+    document.querySelector('#projects-button');
 
 
-aboutButton?.addEventListener(
+function setupRobotGrab(
+    button,
+    edge,
+    pullAmount
+) {
 
-    'click',
+    button?.addEventListener(
+        'click',
+        async event => {
 
-    async event => {
-
-
-        /*
-            If Three.js is unavailable,
-            let the normal link work.
-        */
-
-        if (!robotView) {
-            return;
-        }
+            if (!robotView) {
+                return;
+            }
 
 
-        /*
-            Reduced motion users use
-            normal navigation.
-        */
-
-        if (
-            window.matchMedia(
-                '(prefers-reduced-motion: reduce)'
-            ).matches
-        ) {
-
-            return;
-
-        }
+            if (
+                window.matchMedia(
+                    '(prefers-reduced-motion: reduce)'
+                ).matches
+            ) {
+                return;
+            }
 
 
-        const {
-            container,
-            joints
-        } = robotView;
+            const { joints } =
+                robotView;
 
 
-        /*
-            Make sure the GLB contains
-            every joint we need.
-        */
-
-        if (
-            Object
-                .values(joints)
-                .some(
-                    joint => !joint
-                )
-        ) {
-
-            return;
-
-        }
+            if (
+                Object
+                    .values(joints)
+                    .some(joint => !joint)
+            ) {
+                return;
+            }
 
 
-        /*
-            From this point forward,
-            we control navigation.
-        */
-
-        event.preventDefault();
+            event.preventDefault();
 
 
-        if (robotBusy) {
-            return;
-        }
+            if (robotBusy) {
+                return;
+            }
 
 
-        robotBusy = true;
+            robotBusy = true;
 
 
-        const destination =
-            aboutButton.href;
+            const destination =
+                button.href;
+
+            const paper =
+                button;
+
+            const restingPose =
+                getRobotPose();
 
 
+            try {
 
-        /*
-            Create the paper only
-            when the interaction starts.
-        */
-
-       
-        const paper=aboutButton;
-
-        const restingPose =
-            getRobotPose();
+                const contactPose =
+                    getRobotContactPose(
+                        restingPose,
+                        paper,
+                        edge
+                    );
 
 
-
-        try {
-
-            /*
-                Calculate exact position
-                of the paper edge.
-            */
-
-            const contactPose =
-                getRobotContactPose(
-                    restingPose,
-                    paper
-                );
-
-
-
-            /*
-                Position used when the
-                robot pulls upward.
-            */
-
-            const pulledPose = {
-
-                ...contactPose,
-
-            };
-
-
-
-            /*  REACH PAPER  */
-
-            await animateRobotPose(
-                contactPose,
-                850
-            );
-
-
-
-            /*  CLOSE GRIPPER  */
-
-            await animateRobotPose(
-                {
+                const pulledPose = {
 
                     ...contactPose,
 
-                    lowerJaw:
-                        restingPose.lowerJaw +
-                        0.1,
+                    x:
+                        contactPose.x +
+                        pullAmount
 
-                    upperJaw:
-                        restingPose.upperJaw -
-                        0.1
-
-                },
-
-                300
-            );
+                };
 
 
+                /* MOVE TO CARD */
 
-            paper.classList.add(
-                'is-gripped'
-            );
-
-
-
-            /*  SMALL HOLD  */
-
-            await new Promise(
-                resolve =>
-                    setTimeout(
-                        resolve,
-                        250
-                    )
-            );
+                await animateRobotPose(
+                    contactPose,
+                    850
+                );
 
 
+                /* CLOSE GRIPPER */
 
-            /*  PULL PAPER */
+                await animateRobotPose(
+                    {
 
-            paper.classList.add(
-                'is-pulled'
-            );
+                        ...contactPose,
+
+                        lowerJaw:
+                            restingPose.lowerJaw +
+                            0.1,
+
+                        upperJaw:
+                            restingPose.upperJaw -
+                            0.1
+
+                    },
+
+                    300
+                );
 
 
-            await animateRobotPose(
-                pulledPose,
-                600
-            );
+                paper.classList.add(
+                    'is-gripped'
+                );
 
 
+                await new Promise(
+                    resolve =>
+                        setTimeout(
+                            resolve,
+                            250
+                        )
+                );
 
-            /*
-                Temporary behavior:
 
-                after the pull animation,
-                open the About page.
+                /* PULL CARD */
 
-                Later this is where we will
-                replace the normal navigation
-                with the full paper reveal.
-            */
+                paper.classList.add(
+                    'is-pulled'
+                );
 
-            window.location.href =
-                destination;
+
+                await animateRobotPose(
+                    pulledPose,
+                    600
+                );
+
+
+                window.location.href =
+                    destination;
+
+            }
+
+
+            finally {
+
+                applyRobotPose(
+                    restingPose
+                );
+
+
+                robotView.render();
+
+
+                paper.classList.remove(
+                    'is-pulled'
+                );
+
+
+                paper.classList.remove(
+                    'is-gripped'
+                );
+
+
+                robotBusy = false;
+
+            }
 
         }
 
+    );
 
-        finally {
-
-            /*
-                Cleanup if navigation
-                doesn't happen for some reason.
-            */
-
-            applyRobotPose(
-                restingPose
-            );
+}
 
 
-            robotView.render();
+/* ABOUT — grab from the right edge */
 
-
-            paper.classList.remove(
-                'is-pulled'
-            );
-
-
-            paper.classList.remove(
-                'is-gripped'
-            );
-
-
-            robotBusy = false;
-
-        }
-
-    }
-
+setupRobotGrab(
+    aboutButton,
+    'right',
+    0.25
 );
 
 
+/* PROJECTS — grab from the left edge */
 
-/* 
-   PROJECTS HOME BUTTON */
-
-/*
-    Projects currently uses normal navigation.
-
-    Later we will add the second robot
-    grab animation here.
-*/
-
-const projectsButton =
-    document.querySelector(
-        '#projects-button'
-    );
-
-
-projectsButton?.addEventListener(
-    'click',
-    () => {
-
-        /*
-            Intentionally empty for now.
-
-            The href in HTML handles
-            normal navigation.
-        */
-
-    }
+setupRobotGrab(
+    projectsButton,
+    'left',
+    -0.25
 );
