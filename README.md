@@ -48,11 +48,9 @@ The robotic arm remains an interactive element on Home; it is no longer listed a
 
 ## Contact Page
 
-The Contact page includes name, email and message fields, a GitHub link and a LinkedIn placeholder.
+The Contact page includes name, email and message fields, plus links to GitHub and LinkedIn.
 
 **Message submission is not connected yet.** The Send Message button remains disabled.
-
-The LinkedIn button is also disabled until a profile URL is added.
 
 ## Technologies
 
