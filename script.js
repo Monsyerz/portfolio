@@ -396,6 +396,9 @@ async function initRobot() {
                     'Jaw_Right'
                 )
         };
+
+
+        
         // STARTING POSE
 
         joints.shoulder.rotation.x =
