@@ -1,606 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Projects | Kacper Popek</title>
-
-    <meta
-        name="description"
-        content="Software and engineering projects by Kacper Popek."
-    >
-
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects | Kacper Popek</title>
+  <meta name="description" content="Software and engineering projects by Kacper Popek.">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
 </head>
-
 <body class="projects-page">
-
-    <a class="skip-link" href="#main">
-        Skip to content
-    </a>
-
-    <header>
-
-        <div class="container">
-
-            <div class="logo">
-
-                <a
-                    href="index.html"
-                    aria-label="Kacper Popek — home"
-                >
-
-                    <svg
-                        class="logo-mark"
-                        viewBox="280 265 735 620"
-                        aria-hidden="true"
-                        focusable="false"
-                    >
-
-                        <g
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="14"
-                            stroke-linejoin="miter"
-                        >
-
-                            <path
-                                d="M388 535V287H304V858H388V570L668 858H783L498 569L653 413H835C925 413 925 552 835 552H692L617 635L735 762V638H843C1039 638 1039 327 843 327H625L388 569"
-                            />
-
-                        </g>
-
-                    </svg>
-
-                    <span class="logo-name">
-                        Kacper<br>
-                        Popek
-                    </span>
-
-                </a>
-
-            </div>
-
-            <nav class="navbar" aria-label="Main navigation">
-
-                <ul class="links">
-
-                    <li>
-                        <a href="index.html">
-                            Home
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="aboutme.html">
-                            About
-                        </a>
-                    </li>
-
-                    <li>
-
-                        <a
-                            href="projects.html"
-                            aria-current="page"
-                        >
-                            Projects
-                        </a>
-
-                    </li>
-
-                </ul>
-
-            </nav>
-
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <a href="index.html" aria-label="Kacper Popek — home">
+          <svg class="logo-mark" viewBox="280 265 735 620" aria-hidden="true" focusable="false">
+            <g fill="none" stroke="currentColor" stroke-width="14" stroke-linejoin="miter"><path d="M388 535V287H304V858H388V570L668 858H783L498 569L653 413H835C925 413 925 552 835 552H692L617 635L735 762V638H843C1039 638 1039 327 843 327H625L388 569"/></g>
+          </svg>
+          <span class="logo-name">Kacper<br>Popek</span>
+        </a>
+      </div>
+      <nav class="navbar" aria-label="Main navigation">
+        <ul class="links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="aboutme.html">About Me</a></li>
+          <li><a href="projects.html" aria-current="page">Projects</a></li>
+          <li><span class="nav-future" aria-disabled="true" title="Coming soon">Contact <span aria-hidden="true">↗</span></span></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main id="main">
+    <section class="projects-hero"><div class="container">
+      <p class="page-label">PROJECTS</p><h1>Building practical software around real problems.</h1>
+      <p class="projects-lead">My current focus is software development with Python, Flask, SQL and web technologies, supported by a background in engineering and technical problem solving.</p>
+    </div></section>
+    <section class="projects-section"><div class="container">
+      <div class="projects-heading"><div><p class="page-label">SOFTWARE</p><h2>Software Projects</h2></div>
+        <div class="project-filters" hidden role="group" aria-label="Filter projects">
+          <button type="button" class="filter-button active" data-filter="all" aria-pressed="true">All</button>
+          <button type="button" class="filter-button" data-filter="software" aria-pressed="false">Software</button>
+          <button type="button" class="filter-button" data-filter="engineering" aria-pressed="false">Engineering</button>
         </div>
-
-    </header>
-
-    <main id="main">
-
-        <section class="projects-hero">
-
-            <div class="container">
-
-                <p class="page-label">
-                    PROJECTS
-                </p>
-
-                <h1>
-                    Building practical software
-                    around real problems.
-                </h1>
-
-                <p class="projects-lead">
-                    My current focus is software development with Python,
-                    Flask, SQL and web technologies, supported by a background
-                    in engineering and technical problem solving.
-                </p>
-
-            </div>
-
-        </section>
-
-        <section class="projects-section">
-
-            <div class="container">
-
-                <div class="projects-heading">
-
-                    <div>
-
-                        <p class="page-label">
-                            SOFTWARE
-                        </p>
-
-                        <h2>
-                            Software Projects
-                        </h2>
-
-                    </div>
-
-                    <div
-                        class="project-filters"
-                        hidden
-                        role="group"
-                        aria-label="Filter projects"
-                    >
-
-                        <button
-                            type="button"
-                            class="filter-button active"
-                            data-filter="all"
-                            aria-pressed="true"
-                        >
-                            All
-                        </button>
-
-                        <button
-                            type="button"
-                            class="filter-button"
-                            data-filter="software"
-                            aria-pressed="false"
-                        >
-                            Software
-                        </button>
-
-                        <button
-                            type="button"
-                            class="filter-button"
-                            data-filter="engineering"
-                            aria-pressed="false"
-                        >
-                            Engineering
-                        </button>
-
-                    </div>
-
-                </div>
-
-                <p
-                    id="project-status"
-                    class="project-status"
-                    role="status"
-                    aria-live="polite"
-                ></p>
-
-                <ul id="project-list" class="project-list">
-
-                    <li
-                        class="project-item project-featured"
-                        data-category="software"
-                    >
-
-                        <div class="project-number">
-                            01
-                        </div>
-
-                        <div class="project-content">
-
-                            <p class="project-category">
-                                SOFTWARE
-                            </p>
-
-                            <h3>
-                                CutFlow
-                            </h3>
-
-                            <p class="project-language">
-                                Python · Flask · JavaScript · Algorithms
-                            </p>
-
-                            <p class="project-description">
-                                A web-based material cutting optimizer designed
-                                to reduce waste by organizing required cuts
-                                across available stock lengths.
-                            </p>
-
-                            <p class="project-description">
-                                The application uses a custom Merge Sort
-                                implementation and a First Fit Decreasing
-                                optimization strategy, with backend validation,
-                                dynamic JavaScript input rows and material
-                                utilization calculations.
-                            </p>
-
-                            <p class="project-context">
-                                Full-stack learning project · Optimization logic
-                            </p>
-
-                            <div class="project-actions">
-
-                                <a
-                                    class="project-link"
-                                    href="https://github.com/Monsyerz/cutflow"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    GitHub →
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </li>
-
-                    <li
-                        class="project-item"
-                        data-category="software"
-                    >
-
-                        <div class="project-number">
-                            02
-                        </div>
-
-                        <div class="project-content">
-
-                            <p class="project-category">
-                                SOFTWARE
-                            </p>
-
-                            <h3>
-                                Household Budget Tracker
-                            </h3>
-
-                            <p class="project-language">
-                                Python · Flask · JSON
-                            </p>
-
-                            <p class="project-description">
-                                A budgeting application for estimating monthly
-                                household income, tracking expenses and setting
-                                savings goals.
-                            </p>
-
-                            <p class="project-description">
-                                The Flask interface groups spending by category
-                                and allows saved budget information to be reused
-                                without entering the same data again.
-                            </p>
-
-                            <p class="project-context">
-                                Web application · Personal learning project
-                            </p>
-
-                            <div class="project-actions">
-
-                                <a
-                                    class="project-link"
-                                    href="https://github.com/Monsyerz/tracking_household_app"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    GitHub →
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </li>
-
-                    <li
-                        class="project-item"
-                        data-category="software"
-                    >
-
-                        <div class="project-number">
-                            03
-                        </div>
-
-                        <div class="project-content">
-
-                            <p class="project-category">
-                                SOFTWARE
-                            </p>
-
-                            <h3>
-                                ShopFlow
-                            </h3>
-
-                            <p class="project-language">
-                                Python · Input Validation
-                            </p>
-
-                            <p class="project-description">
-                                A command-line project tracking prototype that
-                                creates structured project records containing
-                                descriptions, dates and status information.
-                            </p>
-
-                            <p class="project-description">
-                                Required fields and date formats are validated
-                                before the project information is accepted.
-                            </p>
-
-                            <p class="project-context">
-                                Command-line prototype · Validation-focused
-                            </p>
-
-                            <div class="project-actions">
-
-                                <a
-                                    class="project-link"
-                                    href="https://github.com/Monsyerz/ShopTracker"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    GitHub →
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </li>
-
-                    <li
-                        class="project-item"
-                        data-category="software"
-                    >
-
-                        <div class="project-number">
-                            04
-                        </div>
-
-                        <div class="project-content">
-
-                            <p class="project-category">
-                                SOFTWARE
-                            </p>
-
-                            <h3>
-                                Blackjack Game
-                            </h3>
-
-                            <p class="project-language">
-                                Python · Game Logic
-                            </p>
-
-                            <p class="project-description">
-                                A text-based Blackjack implementation focused
-                                on functions, control flow and translating game
-                                rules into program logic.
-                            </p>
-
-                            <p class="project-context">
-                                Course-based learning exercise
-                            </p>
-
-                        </div>
-
-                    </li>
-
-                    <li
-                        class="project-item"
-                        data-category="engineering"
-                    >
-
-                        <div class="project-number">
-                            05
-                        </div>
-
-                        <div class="project-content">
-
-                            <img
-                                class="project-preview"
-                                src="assets/projects/robotic-arm/assembly.jpg"
-                                alt="Robotic arm drawing preview"
-                                loading="lazy"
-                            >
-
-                            <p class="project-category">
-                                ENGINEERING
-                            </p>
-
-                            <h3>
-                                Robotic Arm
-                            </h3>
-
-                            <p class="project-language">
-                                Autodesk Inventor · Mechanical Design
-                            </p>
-
-                            <p class="project-description">
-                                An academic mechanical design project developed
-                                from individual components into an articulated
-                                assembly and technical drawings.
-                            </p>
-
-                            <p class="project-context">
-                                Academic concept · Modeling and documentation
-                            </p>
-
-                            <div class="project-actions">
-
-                                <a
-                                    class="project-link"
-                                    href="projects/robotic-arm.html"
-                                >
-                                    Case Study →
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </li>
-
-                    <li
-                        class="project-item"
-                        data-category="engineering"
-                    >
-
-                        <div class="project-number">
-                            06
-                        </div>
-
-                        <div class="project-content">
-
-                            <img
-                                class="project-preview"
-                                src="assets/projects/glass-enclosures/residential-1.jpg"
-                                alt="Architectural glass enclosure drawing preview"
-                                loading="lazy"
-                            >
-
-                            <p class="project-category">
-                                ENGINEERING
-                            </p>
-
-                            <h3>
-                                Architectural Glass Enclosures
-                            </h3>
-
-                            <p class="project-language">
-                                AutoCAD · Professional Drafting
-                            </p>
-
-                            <p class="project-description">
-                                Plans, elevations and connection details
-                                documenting the relationship between glass,
-                                hardware and surrounding finishes.
-                            </p>
-
-                            <p class="project-context">
-                                Professional drafting · Selected drawing excerpts
-                            </p>
-
-                            <div class="project-actions">
-
-                                <a
-                                    class="project-link"
-                                    href="projects/glass-enclosures.html"
-                                >
-                                    Case Study →
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </li>
-
-                    <li
-                        class="project-item"
-                        data-category="engineering"
-                    >
-
-                        <div class="project-number">
-                            07
-                        </div>
-
-                        <div class="project-content">
-
-                            <img
-                                class="project-preview"
-                                src="assets/projects/metal-baffles/panels-1.jpg"
-                                alt="Metal baffle fabrication drawing preview"
-                                loading="lazy"
-                            >
-
-                            <p class="project-category">
-                                ENGINEERING
-                            </p>
-
-                            <h3>
-                                Metal Baffle Fabrication
-                            </h3>
-
-                            <p class="project-language">
-                                AutoCAD · Fabrication Documentation
-                            </p>
-
-                            <p class="project-description">
-                                Fabrication drawings containing panel outlines,
-                                dimensions, hole locations and cutouts prepared
-                                for production coordination.
-                            </p>
-
-                            <p class="project-context">
-                                Professional drafting · Fabrication documentation
-                            </p>
-
-                            <div class="project-actions">
-
-                                <a
-                                    class="project-link"
-                                    href="projects/metal-baffles.html"
-                                >
-                                    Case Study →
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </li>
-
-                </ul>
-
-            </div>
-
-        </section>
-
-        <nav
-            class="page-transition-nav"
-            aria-label="Page navigation"
-        >
-
-            <a
-                class="page-transition-link page-transition-prev"
-                href="aboutme.html"
-            >
-                ← About Me
-            </a>
-
-            <a
-                class="page-transition-link page-transition-home"
-                href="index.html"
-            >
-                Home
-            </a>
-
-        </nav>
-
-    </main>
-
-    <footer class="footer">
-
-        <div class="container">
-
-            <p>
-                © 2026 Kacper Popek
-            </p>
-
-        </div>
-
-    </footer>
-
+      </div>
+      <p id="project-status" class="project-status" role="status" aria-live="polite"></p>
+      <ul id="project-list" class="project-list"><li class="project-item project-featured" data-category="software"><div class="project-number">01</div><div class="project-content">
+<p class="project-category">SOFTWARE</p><h3>CutFlow</h3><p class="project-language">Python · Flask · JavaScript · Algorithms</p>
+<p class="project-description">A web-based material cutting optimizer designed to reduce waste by organizing required cuts across available stock lengths.</p>
+<p class="project-description">The application uses a custom Merge Sort implementation and a First Fit Decreasing optimization strategy, with backend validation, dynamic JavaScript input rows and material utilization calculations.</p>
+<p class="project-context">Full-stack learning project · Optimization logic</p>
+<div class="project-actions"><a class="project-link" href="https://github.com/Monsyerz/cutflow" target="_blank" rel="noopener noreferrer">GitHub →</a></div>
+</div></li>
+<li class="project-item" data-category="software"><div class="project-number">02</div><div class="project-content">
+<p class="project-category">SOFTWARE</p><h3>Household Budget Tracker</h3><p class="project-language">Python · Flask · JSON</p>
+<p class="project-description">A budgeting application for estimating monthly household income, tracking expenses and setting savings goals.</p>
+<p class="project-description">The Flask interface groups spending by category and allows saved budget information to be reused without entering the same data again.</p>
+<p class="project-context">Web application · Personal learning project</p>
+<div class="project-actions"><a class="project-link" href="https://github.com/Monsyerz/tracking_household_app" target="_blank" rel="noopener noreferrer">GitHub →</a></div>
+</div></li>
+<li class="project-item" data-category="software"><div class="project-number">03</div><div class="project-content">
+<p class="project-category">SOFTWARE</p><h3>ShopFlow</h3><p class="project-language">Python · Input Validation</p>
+<p class="project-description">A command-line project tracking prototype that creates structured project records containing descriptions, dates and status information.</p>
+<p class="project-description">Required fields and date formats are validated before the project information is accepted.</p>
+<p class="project-context">Command-line prototype · Validation-focused</p>
+<div class="project-actions"><a class="project-link" href="https://github.com/Monsyerz/ShopTracker" target="_blank" rel="noopener noreferrer">GitHub →</a></div>
+</div></li>
+<li class="project-item" data-category="software"><div class="project-number">04</div><div class="project-content">
+<p class="project-category">SOFTWARE</p><h3>Blackjack Game</h3><p class="project-language">Python · Game Logic</p>
+<p class="project-description">A text-based Blackjack implementation focused on functions, control flow and translating game rules into program logic.</p>
+<p class="project-context">Course-based learning exercise</p>
+</div></li>
+<li class="project-item" data-category="engineering"><div class="project-number">05</div><div class="project-content">
+<img class="project-preview" src="assets/projects/robotic-arm/assembly.jpg" alt="Robotic arm drawing preview" loading="lazy">
+<p class="project-category">ENGINEERING</p><h3>Robotic Arm</h3><p class="project-language">Autodesk Inventor · Mechanical Design</p>
+<p class="project-description">An academic mechanical design project developed from individual components into an articulated assembly and technical drawings.</p>
+<p class="project-context">Academic concept · Modeling and documentation</p>
+<div class="project-actions"><a class="project-link" href="projects/robotic-arm.html">Case Study →</a></div>
+</div></li>
+<li class="project-item" data-category="engineering"><div class="project-number">06</div><div class="project-content">
+<img class="project-preview" src="assets/projects/glass-enclosures/residential-1.jpg" alt="Architectural glass enclosure drawing preview" loading="lazy">
+<p class="project-category">ENGINEERING</p><h3>Architectural Glass Enclosures</h3><p class="project-language">AutoCAD · Professional Drafting</p>
+<p class="project-description">Plans, elevations and connection details documenting the relationship between glass, hardware and surrounding finishes.</p>
+<p class="project-context">Professional drafting · Selected drawing excerpts</p>
+<div class="project-actions"><a class="project-link" href="projects/glass-enclosures.html">Case Study →</a></div>
+</div></li>
+<li class="project-item" data-category="engineering"><div class="project-number">07</div><div class="project-content">
+<img class="project-preview" src="assets/projects/metal-baffles/panels-1.jpg" alt="Metal baffle fabrication drawing preview" loading="lazy">
+<p class="project-category">ENGINEERING</p><h3>Metal Baffle Fabrication</h3><p class="project-language">AutoCAD · Fabrication Documentation</p>
+<p class="project-description">Fabrication drawings containing panel outlines, dimensions, hole locations and cutouts prepared for production coordination.</p>
+<p class="project-context">Professional drafting · Fabrication documentation</p>
+<div class="project-actions"><a class="project-link" href="projects/metal-baffles.html">Case Study →</a></div>
+</div></li>
+</ul></div></section>
+    <nav class="page-transition-nav" aria-label="Page navigation"><a class="page-transition-link page-transition-prev" href="aboutme.html">← About Me</a><a class="page-transition-link page-transition-home" href="index.html">Home</a></nav>
+  </main>
+  <footer class="footer"><div class="container"><p>© 2026 Kacper Popek</p></div></footer>
 </body>
-
 </html>

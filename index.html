@@ -2,191 +2,261 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Kacper Popek | Software Engineering</title>
+  <title>Kacper Popek | Software Engineering</title>
 
-    <meta
-        name="description"
-        content="Kacper Popek — software engineering student with a background in mechatronics and engineering."
-    >
+  <meta
+    name="description"
+    content="Kacper Popek — software engineering student based in New York City."
+  >
 
-    <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
 
-    <script type="importmap">
-    {
-        "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js",
-            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/"
-        }
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/"
     }
-    </script>
+  }
+  </script>
 
-    <script src="script.js" defer></script>
+  <script src="script.js" defer></script>
 </head>
 
 <body class="home-page">
 
-    <a class="skip-link" href="#main">
-        Skip to content
-    </a>
+  <a class="skip-link" href="#main">
+    Skip to content
+  </a>
 
+  <header>
+    <div class="container">
 
-    <header>
+      <div class="logo">
+        <a href="index.html" aria-label="Kacper Popek — home">
 
-        <div class="container">
+          <svg
+            class="logo-mark"
+            viewBox="280 265 735 620"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <g
+              fill="none"
+              stroke="currentColor"
+              stroke-width="14"
+              stroke-linejoin="miter"
+            >
+              <path d="M388 535V287H304V858H388V570L668 858H783L498 569L653 413H835C925 413 925 552 835 552H692L617 635L735 762V638H843C1039 638 1039 327 843 327H625L388 569"/>
+            </g>
+          </svg>
 
-            <div class="logo">
+          <span class="logo-name">
+            Kacper<br>
+            Popek
+          </span>
 
-                <a
-                    href="index.html"
-                    aria-label="Kacper Popek — home"
-                >
+        </a>
+      </div>
 
-                    <svg
-                        class="logo-mark"
-                        viewBox="280 265 735 620"
-                        aria-hidden="true"
-                        focusable="false"
-                    >
+      <nav class="navbar" aria-label="Main navigation">
+        <ul class="links">
 
-                        <g
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="14"
-                            stroke-linejoin="miter"
-                        >
+          <li>
+            <a href="index.html" aria-current="page">
+              Home
+            </a>
+          </li>
 
-                            <path
-                                d="M388 535V287H304V858H388V570L668 858H783L498 569L653 413H835C925 413 925 552 835 552H692L617 635L735 762V638H843C1039 638 1039 327 843 327H625L388 569"
-                            />
+          <li>
+            <a href="aboutme.html">
+              About Me
+            </a>
+          </li>
 
-                        </g>
+          <li>
+            <a href="projects.html">
+              Projects
+            </a>
+          </li>
 
-                    </svg>
+          <li>
+            <span
+              class="nav-future"
+              aria-disabled="true"
+              title="Coming soon"
+            >
+              Contact
+              <span aria-hidden="true">↗</span>
+            </span>
+          </li>
 
-                    <span class="logo-name">
-                        Kacper<br>
-                        Popek
-                    </span>
+        </ul>
+      </nav>
 
-                </a>
+    </div>
+  </header>
 
-            </div>
+  <main id="main">
 
+    <section id="home">
+      <div class="container">
 
-            <nav class="navbar" aria-label="Main navigation">
+        <div class="home-intro">
 
-                <ul class="links">
+          <p class="home-label">
+            SOFTWARE ENGINEERING × ENGINEERING
+          </p>
 
-                    <li>
-                        <a href="aboutme.html">
-                            About
-                        </a>
-                    </li>
+          <h1>
+            Kacper Popek
+          </h1>
 
-                    <li>
-                        <a href="projects.html">
-                            Projects
-                        </a>
-                    </li>
-
-                </ul>
-
-            </nav>
+          <p class="home-subtitle">
+            Software engineering student based in New York City.
+          </p>
 
         </div>
 
-    </header>
+        <div class="robot-navigation">
 
+          <div id="robot-container" aria-label="Robotic arm">
 
-    <a
-        id="projects-edge"
-        class="page-peek page-peek-left"
-        href="projects.html"
-        aria-label="Open Projects"
+            <p class="robot-placeholder" role="status">
+              Robot loading…
+            </p>
+
+          </div>
+
+        </div>
+
+        <p class="home-hint">
+          Choose a corner.
+          <span>Hover to lift. Click to explore.</span>
+        </p>
+
+      </div>
+    </section>
+
+  </main>
+
+  <a
+    id="projects-edge"
+    class="page-peek page-peek-left"
+    href="projects.html"
+    aria-label="Open Projects"
+  >
+
+    <span class="paper-underlay" aria-hidden="true"></span>
+
+    <svg
+      class="paper-fold"
+      viewBox="0 0 200 200"
+      aria-hidden="true"
     >
+      <defs>
+        <linearGradient
+          id="fold-left"
+          x1="0"
+          y1="1"
+          x2="1"
+          y2="0"
+        >
+          <stop offset="0" stop-color="#c4c7be"/>
+          <stop offset=".38" stop-color="#f5f5f0"/>
+          <stop offset=".78" stop-color="#ffffff"/>
+          <stop offset="1" stop-color="#dedfd7"/>
+        </linearGradient>
+      </defs>
 
-        <span class="page-peek-label">
-            Projects
-        </span>
+      <path
+        class="fold-shadow"
+        d="M0 0L200 200Q177 132 150 52Q97 24 0 0Z"
+      />
 
-        <span class="page-peek-arrow">
-            ←
-        </span>
+      <path
+        fill="url(#fold-left)"
+        d="M0 0L200 200Q169 126 145 57Q91 28 0 0Z"
+      />
 
-    </a>
+      <path
+        class="fold-crease"
+        d="M0 0L200 200"
+      />
+    </svg>
 
+    <span class="page-peek-label">
+      Projects
+      <span aria-hidden="true">↗</span>
+    </span>
 
-    <a
-        id="about-edge"
-        class="page-peek page-peek-right"
-        href="aboutme.html"
-        aria-label="Open About Me"
+    <span class="paper-grab-point" aria-hidden="true"></span>
+
+  </a>
+
+  <a
+    id="about-edge"
+    class="page-peek page-peek-right"
+    href="aboutme.html"
+    aria-label="Open About Me"
+  >
+
+    <span class="paper-underlay" aria-hidden="true"></span>
+
+    <svg
+      class="paper-fold"
+      viewBox="0 0 200 200"
+      aria-hidden="true"
     >
+      <defs>
+        <linearGradient
+          id="fold-right"
+          x1="0"
+          y1="1"
+          x2="1"
+          y2="0"
+        >
+          <stop offset="0" stop-color="#c4c7be"/>
+          <stop offset=".38" stop-color="#f5f5f0"/>
+          <stop offset=".78" stop-color="#ffffff"/>
+          <stop offset="1" stop-color="#dedfd7"/>
+        </linearGradient>
+      </defs>
 
-        <span class="page-peek-arrow">
-            →
-        </span>
+      <path
+        class="fold-shadow"
+        d="M0 0L200 200Q177 132 150 52Q97 24 0 0Z"
+      />
 
-        <span class="page-peek-label">
-            About Me
-        </span>
+      <path
+        fill="url(#fold-right)"
+        d="M0 0L200 200Q169 126 145 57Q91 28 0 0Z"
+      />
 
-    </a>
+      <path
+        class="fold-crease"
+        d="M0 0L200 200"
+      />
+    </svg>
 
+    <span class="page-peek-label">
+      <span aria-hidden="true">↖</span>
+      About Me
+    </span>
 
-    <main id="main">
+    <span class="paper-grab-point" aria-hidden="true"></span>
 
-        <section id="home">
+  </a>
 
-            <div class="container">
-
-
-                <div class="home-intro">
-
-                    <p class="home-label">
-                        SOFTWARE ENGINEERING × ENGINEERING
-                    </p>
-
-                    <h1>
-                        Kacper Popek
-                    </h1>
-
-                    <p class="home-subtitle">
-                        Software engineering student based in New York City.
-                    </p>
-
-                </div>
-
-
-                <div class="robot-navigation">
-
-                    <div
-                        id="robot-container"
-                        aria-label="Interactive robotic arm"
-                    >
-
-                        <p class="robot-placeholder">
-                            Robot loading...
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <p class="home-hint">
-                    Choose a corner.
-                </p>
-
-
-            </div>
-
-        </section>
-
-    </main>
+  <p
+    id="transition-status"
+    class="sr-only"
+    role="status"
+    aria-live="polite"
+  ></p>
 
 </body>
 
