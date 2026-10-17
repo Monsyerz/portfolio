@@ -1,40 +1,93 @@
-# Kacper Popek — Engineering & Software Portfolio
+# Kacper Popek — Software & Engineering Portfolio
 
-A personal learning project built with HTML, CSS and vanilla JavaScript. The black and green style and recognizable KP mark are retained. An inline SVG logo and page background share a scroll-driven palette.
+My personal portfolio, built with HTML, CSS, vanilla JavaScript and Three.js.
 
-## Run locally
-
-Open `index.html` in a browser, or serve this directory with `python -m http.server 8000` and visit `http://localhost:8000/`.
+The website presents my software projects and engineering background through a minimal layout and an interactive robotic arm.
 
 ## Features
 
-- All six project cards remain visible without JavaScript; Engineering and Software filters progressively enhance the HTML
-- Software descriptions checked against repository code; unavailable private source links are labeled
-- Case studies for a robotic arm, glass enclosures and metal baffle fabrication
-- Reviewed Inventor screenshots and CAD detail galleries with full-size links
+- Interactive 3D robotic arm loaded from a GLB model
+- Paper corners that reveal Projects and About Me on hover or keyboard focus
+- Animated navigation with the robot gripping and pulling a page into view
+- Robot punch-through transition when returning Home
+- Software and Engineering project filters
+- Engineering case studies and drawing galleries
 - Responsive layouts and reduced-motion support
+- Standard navigation links available without animation
 
-`index.html`, `style.css` and `script.js` power the home page. `projects/` contains the case studies; `assets/projects/` contains only the selected images.
+## Projects
 
-## Image privacy review
+### Software
 
-All ten supplied JPEGs were visually reviewed along with filenames, image metadata and source text. No client names, addresses, contact details or credentials were found in the included material. JPEG metadata contains only basic JFIF information; no EXIF was present. The existing owner's public contact information and original logo are retained.
+- **CutFlow** — material cutting optimizer built with Python, Flask and JavaScript
+- **Household Budget Tracker** — budgeting application built with Python, Flask and JSON storage
+- **ShopFlow** — Python command-line project tracking prototype
+- **Blackjack Game** — course-based Python exercise focused on game logic
 
-Eight images are included: three residential enclosure drawings, one bathtub hardware detail, one metal fabrication sheet and three robotic arm images. The owner explicitly approved the seven reattached residential, metal and robotic arm images for inclusion, including their visible dimensions, part identifiers and the technical-view author/date title block. The previously reviewed bathtub hardware detail is retained. The images are reproduced without alteration.
+### Engineering
 
-Still omitted from Git, previews and galleries because of privacy uncertainty:
+- Robotic Arm
+- Architectural Glass Enclosures
+- Metal Baffle Fabrication
 
-| Supplied path under assets/projects/ | Reason |
-| --- | --- |
-| `glass-enclosures/bathtub-1.jpg` | Full room plan, dimensions and coordination annotation; not included in the owner's subsequent approval |
-| `glass-enclosures/bathtub-2.jpg` | Detailed room elevations and dimensions; not included in the owner's subsequent approval |
+## Technologies
 
-These omissions are precautionary, not a claim of confirmed client identities. Source PDFs and native CAD files were not supplied or added. The ZIP's anonymization note was treated as source material; publication selection reflects the review and the owner's explicit follow-up approval.
+- HTML
+- CSS
+- JavaScript
+- Three.js
+- GLTFLoader
 
-## Checks
+## Run Locally
 
-Run `node --check script.js` and `git diff --check`. The existing GitHub Actions workflow runs a Jekyll container build for pull requests to `main`. There is no package manifest or existing local test suite.
+Serve the project with VS Code Live Server, or run:
 
-## Review and missing materials
+```bash
+python -m http.server 8000
+```
 
-See [REVIEW_NOTES.md](REVIEW_NOTES.md) for source evidence, withheld CAD files, missing software screenshots, outstanding owner decisions and validation details.
+Then open:
+
+http://localhost:8000/
+
+Use a local server so the browser can load the GLB model and fetch page content for the transitions.
+
+Three.js is loaded from a CDN and requires an internet connection.
+
+## Project Structure
+
+```text
+index.html
+aboutme.html
+projects.html
+style.css
+script.js
+projects/
+assets/
+```
+
+The robotic arm model is loaded from:
+
+```text
+assets/projects/robotic-arm-v2.glb
+```
+
+## Development Checks
+
+Check JavaScript syntax:
+
+```bash
+node --check script.js
+```
+
+Check Git diff whitespace:
+
+```bash
+git diff --check
+```
+
+Visual checks should cover both paper corners, page transitions, project filters, keyboard navigation and mobile layouts.
+
+## About
+
+I'm Kacper Popek, a Software Engineering student based in New York City with a background in mechatronics and technical engineering work.

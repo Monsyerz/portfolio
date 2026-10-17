@@ -1274,3 +1274,320 @@ window.addEventListener('pageshow', event => {
 });
 
 initRobot();
+
+(() => {
+  if (document.body.classList.contains('contact-page')) {
+    return;
+  }
+
+  let busy = false;
+  let scene = null;
+  let animations = [];
+  let run = 0;
+
+  const reduced = window.matchMedia(
+    '(prefers-reduced-motion: reduce)'
+  );
+
+  const selectors = [
+    '.logo',
+    '.links > li',
+    '.home-intro',
+    '#robot-container',
+    '.home-hint',
+    '.page-peek',
+    '.projects-hero .container',
+    '.projects-heading',
+    '#project-status',
+    '.project-item',
+    '.about-hero .container',
+    '.about-section > .container',
+    '.about-skills > .container',
+    '.page-transition-nav',
+    '.footer'
+  ].join(',');
+
+  function resetContactTransition() {
+    run++;
+
+    animations.forEach(animation => {
+      animation.cancel();
+    });
+
+    animations = [];
+
+    scene?.remove();
+    scene = null;
+
+    busy = false;
+
+    document.body.classList.remove(
+      'is-contact-warping'
+    );
+  }
+
+  async function enterContact(event) {
+    const link = event.currentTarget;
+
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.shiftKey ||
+      event.altKey ||
+      reduced.matches
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+
+    if (busy) return;
+
+    busy = true;
+
+    const currentRun = ++run;
+    const destination = link.href;
+
+    const navigate = () => {
+      location.assign(destination);
+    };
+
+    const watchdog = setTimeout(
+      navigate,
+      3200
+    );
+
+    try {
+      const centerX = innerWidth / 2;
+      const centerY = innerHeight / 2;
+
+      const elements = [
+        ...document.querySelectorAll(selectors)
+      ]
+        .filter(element => {
+          const rect = element.getBoundingClientRect();
+          const style = getComputedStyle(element);
+
+          return (
+            rect.width > 0 &&
+            rect.height > 0 &&
+            rect.bottom > 0 &&
+            rect.top < innerHeight &&
+            rect.right > 0 &&
+            rect.left < innerWidth &&
+            style.visibility !== 'hidden' &&
+            Number(style.opacity) > 0
+          );
+        })
+        .filter((element, index, all) => {
+          return !all.some((parent, parentIndex) => {
+            return (
+              parentIndex !== index &&
+              parent.contains(element)
+            );
+          });
+        })
+        .slice(0, 30);
+
+      scene = document.createElement('div');
+
+      scene.className = 'contact-warp-scene';
+      scene.setAttribute('aria-hidden', 'true');
+
+      scene.innerHTML = `
+        <div class="contact-warp-cover"></div>
+        <div class="contact-warp-hole"></div>
+      `;
+
+      document.body.appendChild(scene);
+
+      document.body.classList.add(
+        'is-contact-warping'
+      );
+
+      const hole = scene.querySelector(
+        '.contact-warp-hole'
+      );
+
+      const cover = scene.querySelector(
+        '.contact-warp-cover'
+      );
+
+      const expansion =
+        Math.hypot(innerWidth, innerHeight) / 80 + 2;
+
+      const holeAnimation = hole.animate(
+        [
+          {
+            transform:
+              'translate(-50%, -50%) scale(0)',
+            opacity: 0,
+            offset: 0
+          },
+          {
+            transform:
+              'translate(-50%, -50%) scale(1)',
+            opacity: 1,
+            offset: .2
+          },
+          {
+            transform:
+              'translate(-50%, -50%) scale(1.7)',
+            opacity: 1,
+            offset: .73
+          },
+          {
+            transform:
+              `translate(-50%, -50%) scale(${expansion})`,
+            opacity: 1,
+            offset: 1
+          }
+        ],
+        {
+          duration: 1250,
+          easing: 'cubic-bezier(.4, 0, .3, 1)',
+          fill: 'forwards'
+        }
+      );
+
+      animations.push(holeAnimation);
+
+      elements.forEach((element, index) => {
+        const rect = element.getBoundingClientRect();
+        const style = getComputedStyle(element);
+
+        const baseTransform =
+          style.transform === 'none'
+            ? ''
+            : style.transform;
+
+        const originX =
+          rect.left + rect.width / 2;
+
+        const originY =
+          rect.top + rect.height / 2;
+
+        const vx = originX - centerX;
+        const vy = originY - centerY;
+
+        const opacity = Number(style.opacity);
+
+        const frames = [
+          0,
+          .2,
+          .45,
+          .7,
+          1
+        ].map(t => {
+          const angle =
+            t * Math.PI * 1.25;
+
+          const radius =
+            Math.pow(1 - t, 1.5);
+
+          const x =
+            centerX +
+            (
+              vx * Math.cos(angle) -
+              vy * Math.sin(angle)
+            ) * radius;
+
+          const y =
+            centerY +
+            (
+              vx * Math.sin(angle) +
+              vy * Math.cos(angle)
+            ) * radius;
+
+          return {
+            transform: `
+              translate(
+                ${x - originX}px,
+                ${y - originY}px
+              )
+              rotate(${t * 420}deg)
+              scale(${1 - t * .98})
+              ${baseTransform}
+            `,
+
+            opacity:
+              opacity * (1 - Math.pow(t, 3)),
+
+            filter:
+              `blur(${t * 3}px)`,
+
+            offset: t
+          };
+        });
+
+        const animation = element.animate(
+          frames,
+          {
+            duration: 1000,
+            delay: Math.min(index * 12, 140),
+            easing: 'cubic-bezier(.45, 0, .7, .4)',
+            fill: 'forwards'
+          }
+        );
+
+        animations.push(animation);
+      });
+
+      const coverAnimation = cover.animate(
+        [
+          { opacity: 0 },
+          { opacity: 1 }
+        ],
+        {
+          duration: 240,
+          delay: 1030,
+          fill: 'forwards'
+        }
+      );
+
+      animations.push(coverAnimation);
+
+      await Promise.allSettled(
+        animations.map(animation => {
+          return animation.finished;
+        })
+      );
+
+      if (currentRun === run) {
+        navigate();
+      }
+    } catch (error) {
+      console.error(
+        'Contact transition unavailable:',
+        error
+      );
+
+      navigate();
+    } finally {
+      clearTimeout(watchdog);
+    }
+  }
+
+  document.querySelectorAll('a[href]').forEach(link => {
+    const url = new URL(link.href);
+
+    if (
+      url.origin === location.origin &&
+      url.pathname.endsWith('/contact.html') &&
+      (!link.target || link.target === '_self')
+    ) {
+      link.addEventListener(
+        'click',
+        enterContact
+      );
+    }
+  });
+
+  window.addEventListener('pageshow', event => {
+    if (event.persisted) {
+      resetContactTransition();
+    }
+  });
+})();
