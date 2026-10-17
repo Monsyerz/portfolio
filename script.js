@@ -1,6 +1,9 @@
 const root = document.documentElement;
 const header = document.querySelector('header');
-const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+const reducedMotion = window.matchMedia(
+  '(prefers-reduced-motion: reduce)'
+);
 
 let robotView = null;
 let transitioning = false;
@@ -16,8 +19,10 @@ function loadRobotModules() {
 
       map.textContent = JSON.stringify({
         imports: {
-          three: 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js',
-          'three/addons/': 'https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/'
+          three:
+            'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js',
+          'three/addons/':
+            'https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/'
         }
       });
 
@@ -97,24 +102,27 @@ if (projectCards.length && projectFilters) {
 }
 
 const ease = t => t * t * (3 - 2 * t);
-
 const mix = (a, b, t) => a + (b - a) * t;
 
 function animate(duration, update) {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     let start;
 
     function frame(now) {
-      start ??= now;
+      try {
+        start ??= now;
 
-      const t = Math.min((now - start) / duration, 1);
+        const t = Math.min((now - start) / duration, 1);
 
-      update(ease(t));
+        update(ease(t));
 
-      if (t < 1) {
-        requestAnimationFrame(frame);
-      } else {
-        resolve();
+        if (t < 1) {
+          requestAnimationFrame(frame);
+        } else {
+          resolve();
+        }
+      } catch (error) {
+        reject(error);
       }
     }
 
@@ -135,6 +143,10 @@ async function initRobot() {
   const container = document.querySelector('#robot-container');
 
   if (!container) return;
+  
+  if (container.parentElement !== document.body) {
+  document.body.appendChild(container);
+  }
 
   const placeholder = container.querySelector('.robot-placeholder');
 
@@ -146,12 +158,7 @@ async function initRobot() {
     const scene = new THREE.Scene();
 
     const camera = new THREE.OrthographicCamera(
-      -1,
-      1,
-      1,
-      -1,
-      .1,
-      2000
+      -1, 1, 1, -1, .1, 2000
     );
 
     camera.position.set(0, 0, 1000);
@@ -175,11 +182,7 @@ async function initRobot() {
     container.appendChild(renderer.domElement);
 
     scene.add(
-      new THREE.HemisphereLight(
-        0xffffff,
-        0x555e50,
-        2.4
-      )
+      new THREE.HemisphereLight(0xffffff, 0x555e50, 2.4)
     );
 
     const key = new THREE.DirectionalLight(0xffffff, 3);
@@ -307,10 +310,7 @@ async function initRobot() {
         this.gripLayer.className = 'robot-grip-layer';
         this.gripLayer.setAttribute('aria-hidden', 'true');
 
-        this.gripLayer.appendChild(
-          this.frontRenderer.domElement
-        );
-
+        this.gripLayer.appendChild(this.frontRenderer.domElement);
         document.body.appendChild(this.gripLayer);
 
         this.render();
@@ -323,12 +323,7 @@ async function initRobot() {
 
         this.activeRest = rest.map(q => {
           if (side === 'right') {
-            return new THREE.Quaternion(
-              q.x,
-              -q.y,
-              -q.z,
-              q.w
-            );
+            return new THREE.Quaternion(q.x, -q.y, -q.z, q.w);
           }
 
           return q.clone();
@@ -370,11 +365,8 @@ async function initRobot() {
       },
 
       setGrip(amount) {
-        joints.jawLeft.position.x =
-          jawRest[0] + amount * .065;
-
-        joints.jawRight.position.x =
-          jawRest[1] - amount * .065;
+        joints.jawLeft.position.x = jawRest[0] + amount * .065;
+        joints.jawRight.position.x = jawRest[1] - amount * .065;
       },
 
       follow(x, y, side, blend = 1) {
@@ -539,18 +531,19 @@ async function initRobot() {
       camera.updateProjectionMatrix();
 
       renderer.setSize(width, height);
-
       view.render();
     }
 
-    new ResizeObserver(resizeRobot).observe(container);
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(resizeRobot).observe(container);
+    } else {
+      window.addEventListener('resize', resizeRobot);
+    }
 
     robotView = view;
 
     resizeRobot();
-
     placeholder?.remove();
-
     notifyHomeReady();
   } catch (error) {
     renderer?.domElement.remove();
@@ -562,7 +555,6 @@ async function initRobot() {
     }
 
     console.error('Could not load robotic arm:', error);
-
     notifyHomeReady();
   }
 }
@@ -622,6 +614,7 @@ async function buildSheet(link) {
 
 async function openPaper(event, link) {
   if (
+    event.defaultPrevented ||
     event.button !== 0 ||
     event.metaKey ||
     event.ctrlKey ||
@@ -639,7 +632,6 @@ async function openPaper(event, link) {
   if (!robotView || reducedMotion.matches) return;
 
   event.preventDefault();
-
   transitioning = true;
 
   document.body.classList.add('is-transitioning');
@@ -682,7 +674,6 @@ async function openPaper(event, link) {
     await view.prepareSide(side);
 
     const start = view.tipOnScreen();
-
     const cornerSize = link.getBoundingClientRect().width;
 
     const grip = {
@@ -700,12 +691,7 @@ async function openPaper(event, link) {
         mix(start.y, grip.y, t) -
         Math.sin(t * Math.PI) * 55;
 
-      view.follow(
-        x,
-        y,
-        side,
-        Math.min(t * 2, 1)
-      );
+      view.follow(x, y, side, Math.min(t * 2, 1));
     });
 
     await animate(200, t => {
@@ -739,26 +725,17 @@ async function openPaper(event, link) {
     function place(x, y, w, h, unfold = 1) {
       sheet.style.width = `${w}px`;
       sheet.style.height = `${h}px`;
-
       sheet.style.transform = `translate(${x}px, ${y}px)`;
-
       sheet.style.borderRadius = `${(1 - unfold) * 9}px`;
 
       preview.style.transform = `scale(${w / width})`;
     }
 
-    place(
-      startX,
-      startY,
-      finalWidth,
-      finalHeight,
-      0
-    );
+    place(startX, startY, finalWidth, finalHeight, 0);
 
     document.body.appendChild(sheet);
 
     view.beginGripLayer();
-
     link.style.visibility = 'hidden';
 
     await animate(1050, t => {
@@ -768,13 +745,7 @@ async function openPaper(event, link) {
         mix(startY, endY, t) -
         Math.sin(Math.PI * t) * 35;
 
-      place(
-        x,
-        y,
-        finalWidth,
-        finalHeight,
-        t
-      );
+      place(x, y, finalWidth, finalHeight, t);
 
       view.follow(
         side === 'left' ? x + finalWidth : x,
@@ -834,24 +805,6 @@ async function createHomePortal(url) {
 
   opening.appendChild(frame);
 
-  const cut = document.createElement('div');
-
-  cut.className = 'portal-cut';
-
-  cut.innerHTML = `
-    <svg viewBox="0 0 112 112">
-      <circle
-        cx="56"
-        cy="56"
-        r="48"
-        pathLength="100"
-      />
-    </svg>
-  `;
-
-  const disc = document.createElement('div');
-  disc.className = 'portal-disc';
-
   const impact = document.createElement('div');
 
   impact.className = 'portal-impact';
@@ -872,14 +825,7 @@ async function createHomePortal(url) {
   const hand = document.createElement('div');
   hand.className = 'portal-gripper';
 
-  effect.append(
-    opening,
-    cut,
-    disc,
-    impact,
-    hand
-  );
-
+  effect.append(opening, impact, hand);
   document.body.appendChild(effect);
 
   let timer;
@@ -906,25 +852,16 @@ async function createHomePortal(url) {
     timer = setTimeout(resolve, 4500);
   }).finally(() => {
     clearTimeout(timer);
-
-    window.removeEventListener(
-      'message',
-      onMessage
-    );
+    window.removeEventListener('message', onMessage);
   });
 
   frame.src = url.href;
 
   const dispose = () => {
     clearTimeout(timer);
-
-    window.removeEventListener(
-      'message',
-      onMessage
-    );
+    window.removeEventListener('message', onMessage);
 
     ready?.();
-
     renderer?.dispose();
 
     const geometries = new Set();
@@ -946,13 +883,8 @@ async function createHomePortal(url) {
       }
     });
 
-    geometries.forEach(geometry => {
-      geometry.dispose();
-    });
-
-    materials.forEach(material => {
-      material.dispose();
-    });
+    geometries.forEach(geometry => geometry.dispose());
+    materials.forEach(material => material.dispose());
 
     effect.remove();
   };
@@ -966,9 +898,7 @@ async function createHomePortal(url) {
     url
   );
 
-  const gltf = await new GLTFLoader().loadAsync(
-    modelUrl.href
-  );
+  const gltf = await new GLTFLoader().loadAsync(modelUrl.href);
 
   source = gltf.scene;
 
@@ -1011,27 +941,15 @@ async function createHomePortal(url) {
 
   scene.add(
     rig,
-    new THREE.HemisphereLight(
-      0xffffff,
-      0x555e50,
-      2.4
-    )
+    new THREE.HemisphereLight(0xffffff, 0x555e50, 2.4)
   );
 
-  const light = new THREE.DirectionalLight(
-    0xffffff,
-    3
-  );
+  const light = new THREE.DirectionalLight(0xffffff, 3);
 
   light.position.set(3, 4, 6);
   scene.add(light);
 
-  const camera = new THREE.PerspectiveCamera(
-    36,
-    1,
-    .1,
-    100
-  );
+  const camera = new THREE.PerspectiveCamera(36, 1, .1, 100);
 
   camera.position.z = 6;
 
@@ -1053,16 +971,12 @@ async function createHomePortal(url) {
 
   hand.appendChild(renderer.domElement);
 
-  const circle = cut.querySelector('circle');
-
   await loaded;
 
   return {
     dispose,
     effect,
     hand,
-    disc,
-    cut,
     impact,
     rig,
 
@@ -1071,53 +985,46 @@ async function createHomePortal(url) {
     },
 
     reveal(radius) {
-  const edges = [
-    1, .83, .96, .88,
-    1.04, .86, .98, .81,
-    1.02, .89, .95, .84,
-    1.03, .87, .97, .82,
-    1.01, .88, .96, .85,
-    1.04, .83, .99, .87
-  ];
+      const edges = [
+        1, .83, .96, .88,
+        1.04, .86, .98, .81,
+        1.02, .89, .95, .84,
+        1.03, .87, .97, .82,
+        1.01, .88, .96, .85,
+        1.04, .83, .99, .87
+      ];
 
-  const points = edges.map((edge, index) => {
-    const angle =
-      index / edges.length * Math.PI * 2;
+      const points = edges.map((edge, index) => {
+        const angle = index / edges.length * Math.PI * 2;
 
-    const x =
-      innerWidth / 2 +
-      Math.cos(angle) * radius * edge;
+        const x =
+          innerWidth / 2 +
+          Math.cos(angle) * radius * edge;
 
-    const y =
-      innerHeight / 2 +
-      Math.sin(angle) * radius * edge;
+        const y =
+          innerHeight / 2 +
+          Math.sin(angle) * radius * edge;
 
-    return `${x}px ${y}px`;
-  });
+        return `${x}px ${y}px`;
+      });
 
-  opening.style.clipPath =
-    `polygon(${points.join(',')})`;
-},
-
-    cutProgress(progress) {
-      circle.style.strokeDashoffset =
-        String(100 * (1 - progress));
+      opening.style.clipPath = `polygon(${points.join(',')})`;
     }
   };
 }
 
 async function returnHome(event, link) {
   if (
+    event.defaultPrevented ||
     event.button !== 0 ||
     event.metaKey ||
     event.ctrlKey ||
     event.shiftKey ||
-    event.altKey
+    event.altKey ||
+    reducedMotion.matches
   ) {
     return;
   }
-
-  if (reducedMotion.matches) return;
 
   if (transitioning) {
     event.preventDefault();
@@ -1125,7 +1032,6 @@ async function returnHome(event, link) {
   }
 
   event.preventDefault();
-
   transitioning = true;
 
   document.body.classList.add('is-returning');
@@ -1138,47 +1044,28 @@ async function returnHome(event, link) {
 
   const watchdog = setTimeout(navigate, 10000);
 
-  window.addEventListener(
-    'resize',
-    navigate,
-    { once: true }
-  );
+  window.addEventListener('resize', navigate, { once: true });
 
   try {
     const portal = await createHomePortal(url);
 
-    portal.cut.remove();
-    portal.disc.remove();
-
     await animate(240, t => {
       portal.hand.style.opacity = String(t);
-
-      portal.rig.position.set(
-        0,
-        0,
-        mix(-4, -1.4, t)
-      );
-
+      portal.rig.position.set(0, 0, mix(-4, -1.4, t));
       portal.render();
     });
 
     await animate(140, t => {
-      portal.rig.position.z =
-        mix(-1.4, 1.5, t);
-
+      portal.rig.position.z = mix(-1.4, 1.5, t);
       portal.render();
     });
 
     document.body.classList.add('is-impacting');
-
     portal.impact.style.opacity = '1';
 
     await animate(150, t => {
       portal.reveal(mix(0, 65, t));
-
-      portal.rig.position.z =
-        mix(1.5, 1.15, t);
-
+      portal.rig.position.z = mix(1.5, 1.15, t);
       portal.render();
     });
 
@@ -1186,9 +1073,7 @@ async function returnHome(event, link) {
       Math.hypot(innerWidth, innerHeight) / 2 * 1.3;
 
     await animate(680, t => {
-      portal.reveal(
-        mix(65, maximum, t)
-      );
+      portal.reveal(mix(65, maximum, t));
 
       portal.rig.position.set(
         0,
@@ -1207,19 +1092,11 @@ async function returnHome(event, link) {
 
     navigate();
   } catch (error) {
-    console.error(
-      'Home transition unavailable:',
-      error
-    );
-
+    console.error('Home transition unavailable:', error);
     navigate();
   } finally {
     clearTimeout(watchdog);
-
-    window.removeEventListener(
-      'resize',
-      navigate
-    );
+    window.removeEventListener('resize', navigate);
   }
 }
 
@@ -1229,20 +1106,22 @@ document.querySelectorAll('.page-peek').forEach(link => {
   });
 });
 
-document.querySelectorAll('a[href]').forEach(link => {
-  if (document.body.classList.contains('home-page')) return;
+if (!document.body.classList.contains('home-page')) {
+  document.querySelectorAll('a[href]').forEach(link => {
+    const url = new URL(link.href);
 
-  const url = new URL(link.href);
-
-  if (
-    url.origin === location.origin &&
-    url.pathname.endsWith('/index.html')
-  ) {
-    link.addEventListener('click', event => {
-      returnHome(event, link);
-    });
-  }
-});
+    if (
+      url.origin === location.origin &&
+      url.pathname.endsWith('/index.html') &&
+      (!link.target || link.target === '_self') &&
+      !link.hasAttribute('download')
+    ) {
+      link.addEventListener('click', event => {
+        returnHome(event, link);
+      });
+    }
+  });
+}
 
 window.addEventListener('pageshow', event => {
   if (!event.persisted) return;
@@ -1267,6 +1146,10 @@ window.addEventListener('pageshow', event => {
     link.style.visibility = '';
   });
 
+  const status = document.querySelector('#transition-status');
+
+  if (status) status.textContent = '';
+
   if (robotView) {
     robotView.renderer.domElement.style.opacity = '';
     robotView.reset();
@@ -1276,18 +1159,12 @@ window.addEventListener('pageshow', event => {
 initRobot();
 
 (() => {
-  if (document.body.classList.contains('contact-page')) {
-    return;
-  }
+  if (document.body.classList.contains('contact-page')) return;
 
   let busy = false;
   let scene = null;
   let animations = [];
   let run = 0;
-
-  const reduced = window.matchMedia(
-    '(prefers-reduced-motion: reduce)'
-  );
 
   const selectors = [
     '.logo',
@@ -1303,17 +1180,13 @@ initRobot();
     '.about-hero .container',
     '.about-section > .container',
     '.about-skills > .container',
-    '.page-transition-nav',
     '.footer'
   ].join(',');
 
   function resetContactTransition() {
     run++;
 
-    animations.forEach(animation => {
-      animation.cancel();
-    });
-
+    animations.forEach(animation => animation.cancel());
     animations = [];
 
     scene?.remove();
@@ -1321,9 +1194,7 @@ initRobot();
 
     busy = false;
 
-    document.body.classList.remove(
-      'is-contact-warping'
-    );
+    document.body.classList.remove('is-contact-warping');
   }
 
   async function enterContact(event) {
@@ -1336,28 +1207,28 @@ initRobot();
       event.metaKey ||
       event.shiftKey ||
       event.altKey ||
-      reduced.matches
+      reducedMotion.matches
     ) {
       return;
     }
 
     event.preventDefault();
 
-    if (busy) return;
+    if (busy || transitioning) return;
 
     busy = true;
+    transitioning = true;
 
     const currentRun = ++run;
     const destination = link.href;
 
     const navigate = () => {
-      location.assign(destination);
+      if (currentRun === run) {
+        location.assign(destination);
+      }
     };
 
-    const watchdog = setTimeout(
-      navigate,
-      3200
-    );
+    const watchdog = setTimeout(navigate, 3200);
 
     try {
       const centerX = innerWidth / 2;
@@ -1402,18 +1273,10 @@ initRobot();
       `;
 
       document.body.appendChild(scene);
+      document.body.classList.add('is-contact-warping');
 
-      document.body.classList.add(
-        'is-contact-warping'
-      );
-
-      const hole = scene.querySelector(
-        '.contact-warp-hole'
-      );
-
-      const cover = scene.querySelector(
-        '.contact-warp-cover'
-      );
+      const hole = scene.querySelector('.contact-warp-hole');
+      const cover = scene.querySelector('.contact-warp-cover');
 
       const expansion =
         Math.hypot(innerWidth, innerHeight) / 80 + 2;
@@ -1421,26 +1284,22 @@ initRobot();
       const holeAnimation = hole.animate(
         [
           {
-            transform:
-              'translate(-50%, -50%) scale(0)',
+            transform: 'translate(-50%, -50%) scale(0)',
             opacity: 0,
             offset: 0
           },
           {
-            transform:
-              'translate(-50%, -50%) scale(1)',
+            transform: 'translate(-50%, -50%) scale(1)',
             opacity: 1,
             offset: .2
           },
           {
-            transform:
-              'translate(-50%, -50%) scale(1.7)',
+            transform: 'translate(-50%, -50%) scale(1.7)',
             opacity: 1,
             offset: .73
           },
           {
-            transform:
-              `translate(-50%, -50%) scale(${expansion})`,
+            transform: `translate(-50%, -50%) scale(${expansion})`,
             opacity: 1,
             offset: 1
           }
@@ -1458,34 +1317,21 @@ initRobot();
         const rect = element.getBoundingClientRect();
         const style = getComputedStyle(element);
 
-        const baseTransform =
-          style.transform === 'none'
-            ? ''
-            : style.transform;
+        const baseTransform = style.transform === 'none'
+          ? ''
+          : style.transform;
 
-        const originX =
-          rect.left + rect.width / 2;
-
-        const originY =
-          rect.top + rect.height / 2;
+        const originX = rect.left + rect.width / 2;
+        const originY = rect.top + rect.height / 2;
 
         const vx = originX - centerX;
         const vy = originY - centerY;
 
         const opacity = Number(style.opacity);
 
-        const frames = [
-          0,
-          .2,
-          .45,
-          .7,
-          1
-        ].map(t => {
-          const angle =
-            t * Math.PI * 1.25;
-
-          const radius =
-            Math.pow(1 - t, 1.5);
+        const frames = [0, .2, .45, .7, 1].map(t => {
+          const angle = t * Math.PI * 1.25;
+          const radius = Math.pow(1 - t, 1.5);
 
           const x =
             centerX +
@@ -1503,34 +1349,23 @@ initRobot();
 
           return {
             transform: `
-              translate(
-                ${x - originX}px,
-                ${y - originY}px
-              )
+              translate(${x - originX}px, ${y - originY}px)
               rotate(${t * 420}deg)
               scale(${1 - t * .98})
               ${baseTransform}
             `,
-
-            opacity:
-              opacity * (1 - Math.pow(t, 3)),
-
-            filter:
-              `blur(${t * 3}px)`,
-
+            opacity: opacity * (1 - Math.pow(t, 3)),
+            filter: `blur(${t * 3}px)`,
             offset: t
           };
         });
 
-        const animation = element.animate(
-          frames,
-          {
-            duration: 1000,
-            delay: Math.min(index * 12, 140),
-            easing: 'cubic-bezier(.45, 0, .7, .4)',
-            fill: 'forwards'
-          }
-        );
+        const animation = element.animate(frames, {
+          duration: 1000,
+          delay: Math.min(index * 12, 140),
+          easing: 'cubic-bezier(.45, 0, .7, .4)',
+          fill: 'forwards'
+        });
 
         animations.push(animation);
       });
@@ -1550,20 +1385,12 @@ initRobot();
       animations.push(coverAnimation);
 
       await Promise.allSettled(
-        animations.map(animation => {
-          return animation.finished;
-        })
+        animations.map(animation => animation.finished)
       );
 
-      if (currentRun === run) {
-        navigate();
-      }
+      navigate();
     } catch (error) {
-      console.error(
-        'Contact transition unavailable:',
-        error
-      );
-
+      console.error('Contact transition unavailable:', error);
       navigate();
     } finally {
       clearTimeout(watchdog);
@@ -1576,12 +1403,10 @@ initRobot();
     if (
       url.origin === location.origin &&
       url.pathname.endsWith('/contact.html') &&
-      (!link.target || link.target === '_self')
+      (!link.target || link.target === '_self') &&
+      !link.hasAttribute('download')
     ) {
-      link.addEventListener(
-        'click',
-        enterContact
-      );
+      link.addEventListener('click', enterContact);
     }
   });
 
@@ -1589,5 +1414,455 @@ initRobot();
     if (event.persisted) {
       resetContactTransition();
     }
+  });
+})();
+
+(() => {
+  const isHome = document.body.classList.contains('home-page');
+  const isAbout = document.body.classList.contains('about-page');
+  const isProjects = document.body.classList.contains('projects-page');
+  const isContact = document.body.classList.contains('contact-page');
+
+  if (!isHome && !isAbout && !isProjects && !isContact) return;
+
+  const destinationNames = (isHome || isContact)
+    ? ['aboutme.html', 'projects.html']
+    : [isAbout ? 'projects.html' : 'aboutme.html'];
+
+  const destinationUrls = destinationNames.map(name => {
+    return new URL(name, document.baseURI);
+  });
+
+  let busy = false;
+  let effect = null;
+  let run = 0;
+
+  async function createEffect(url) {
+    const width = innerWidth;
+    const height = innerHeight;
+
+    const layer = document.createElement('div');
+
+    layer.className = 'peer-transition';
+    layer.setAttribute('aria-hidden', 'true');
+    layer.inert = true;
+    layer.style.visibility = 'hidden';
+
+    const paper = document.createElement('div');
+
+    paper.className = 'peer-paper';
+    paper.style.transform = `translateX(${width}px)`;
+
+    const preview = document.createElement('iframe');
+
+    preview.title = 'Page preview';
+    preview.tabIndex = -1;
+
+    paper.appendChild(preview);
+
+    const crease = document.createElement('div');
+
+    crease.className = 'peer-paper-edge';
+
+    paper.appendChild(crease);
+    layer.appendChild(paper);
+
+    document.body.appendChild(layer);
+
+    let renderer;
+    let source;
+    let timer;
+    let finishPreview;
+    let disposed = false;
+
+    const outgoing = [];
+
+    function releaseModel() {
+      const geometries = new Set();
+      const materials = new Set();
+
+      source?.traverse(node => {
+        if (node.geometry) {
+          geometries.add(node.geometry);
+        }
+
+        if (node.material) {
+          const items = Array.isArray(node.material)
+            ? node.material
+            : [node.material];
+
+          items.forEach(material => {
+            materials.add(material);
+          });
+        }
+      });
+
+      geometries.forEach(geometry => geometry.dispose());
+      materials.forEach(material => material.dispose());
+    }
+
+    function dispose() {
+      if (disposed) return;
+
+      disposed = true;
+
+      clearTimeout(timer);
+
+      preview.onload = null;
+      preview.onerror = null;
+
+      finishPreview?.();
+
+      outgoing.forEach(animation => animation.cancel());
+
+      renderer?.dispose();
+      releaseModel();
+      layer.remove();
+    }
+
+    effect = { dispose };
+
+    const previewReady = new Promise(resolve => {
+      finishPreview = () => resolve(false);
+
+      preview.onload = () => resolve(true);
+      preview.onerror = () => resolve(false);
+
+      timer = setTimeout(() => resolve(false), 4500);
+
+      preview.src = url.href;
+    }).then(loaded => {
+      clearTimeout(timer);
+
+      if (!loaded || disposed) {
+        throw new Error('Page preview unavailable.');
+      }
+    });
+
+    const handReady = (async () => {
+      const [THREE, { GLTFLoader }] = await loadRobotModules();
+
+      const modelUrl = new URL(
+        'assets/projects/robotic-arm-v2.glb',
+        url
+      );
+
+      const gltf = await new GLTFLoader().loadAsync(modelUrl.href);
+
+      source = gltf.scene;
+
+      if (disposed) {
+        releaseModel();
+        throw new Error('Transition cancelled.');
+      }
+
+      const original = source.getObjectByName('Gripper');
+
+      if (!original) {
+        throw new Error('Gripper missing from model.');
+      }
+
+      const hand = original.clone(true);
+
+      hand.position.set(0, 0, 0);
+      hand.rotation.set(0, 0, 0);
+
+      const left = hand.getObjectByName('Jaw_Left');
+      const right = hand.getObjectByName('Jaw_Right');
+
+      if (!left || !right) {
+        throw new Error('Gripper jaws missing.');
+      }
+
+      const jawRest = [
+        left.position.x,
+        right.position.x
+      ];
+
+      const turned = new THREE.Group();
+
+      turned.add(hand);
+      turned.rotation.set(.12, 0, Math.PI / 2);
+
+      const bite = new THREE.Object3D();
+
+      bite.position.set(0, .48, 0);
+      hand.add(bite);
+
+      turned.updateMatrixWorld(true);
+
+      turned.position.sub(
+        bite.getWorldPosition(new THREE.Vector3())
+      );
+
+      const holder = new THREE.Group();
+
+      holder.add(turned);
+
+      holder.scale.setScalar(
+        Math.min(130, Math.max(90, width * .1))
+      );
+
+      const scene = new THREE.Scene();
+
+      scene.add(
+        holder,
+        new THREE.HemisphereLight(0xffffff, 0x555e50, 2.4)
+      );
+
+      const key = new THREE.DirectionalLight(0xffffff, 3);
+
+      key.position.set(400, 600, 800);
+
+      const fill = new THREE.DirectionalLight(0xbbd7b9, 1.8);
+
+      fill.position.set(-400, 200, -300);
+
+      scene.add(key, fill);
+
+      const camera = new THREE.OrthographicCamera(
+        -width / 2,
+        width / 2,
+        height / 2,
+        -height / 2,
+        .1,
+        2000
+      );
+
+      camera.position.z = 1000;
+
+      renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: true
+      });
+
+      renderer.setPixelRatio(
+        Math.min(window.devicePixelRatio || 1, 2)
+      );
+
+      renderer.setSize(width, height);
+      renderer.setClearColor(0, 0);
+
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.15;
+
+      renderer.domElement.className = 'peer-gripper';
+
+      layer.appendChild(renderer.domElement);
+
+      return {
+        move(x, y, grip) {
+          holder.position.set(
+            x - width / 2,
+            height / 2 - y,
+            0
+          );
+
+          left.position.x = jawRest[0] + grip * .065;
+          right.position.x = jawRest[1] - grip * .065;
+
+          renderer.render(scene, camera);
+        }
+      };
+    })();
+
+    const [, hand] = await Promise.all([
+      previewReady,
+      handReady
+    ]);
+
+    if (disposed) {
+      throw new Error('Transition cancelled.');
+    }
+
+    const pageElements = document.querySelectorAll(
+      'body > header, body > main, body > footer'
+    );
+
+    pageElements.forEach(element => {
+      const base = getComputedStyle(element).transform;
+      const transform = base === 'none' ? '' : base;
+
+      const animation = element.animate(
+        [
+          {
+            transform: `translateX(0px) ${transform}`
+          },
+          {
+            transform: `translateX(${-width * .14}px) ${transform}`
+          }
+        ],
+        {
+          duration: 1000,
+          fill: 'both'
+        }
+      );
+
+      animation.pause();
+      animation.currentTime = 0;
+
+      outgoing.push(animation);
+    });
+
+    layer.style.visibility = 'visible';
+
+    return {
+      width,
+      height,
+      hand,
+      dispose,
+
+      paperAt(x, progress = 0) {
+        paper.style.transform = `translateX(${x}px)`;
+        crease.style.opacity = String(1 - progress);
+
+        outgoing.forEach(animation => {
+          animation.currentTime = progress * 1000;
+        });
+      },
+
+      fadeHand(amount) {
+        renderer.domElement.style.opacity = String(amount);
+      }
+    };
+  }
+
+  async function changePage(event) {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.shiftKey ||
+      event.altKey ||
+      reducedMotion.matches
+    ) {
+      return;
+    }
+
+    if (
+      busy ||
+      transitioning ||
+      document.body.classList.contains('is-contact-warping')
+    ) {
+      event.preventDefault();
+      return;
+    }
+
+    event.preventDefault();
+
+    busy = true;
+    transitioning = true;
+
+    const currentRun = ++run;
+    const url = new URL(event.currentTarget.href);
+
+    const navigate = () => {
+      if (currentRun === run) {
+        location.assign(url.href);
+      }
+    };
+
+    const watchdog = setTimeout(navigate, 8000);
+
+    window.addEventListener('resize', navigate, { once: true });
+
+    document.body.classList.add('is-peer-transitioning');
+
+    try {
+      const view = await createEffect(url);
+
+      const y = view.height * .53;
+      const edge = view.width - 14;
+
+      view.paperAt(edge);
+
+      await animate(380, t => {
+        if (currentRun !== run) return;
+
+        const start = view.width + 110;
+        const x = mix(start, edge, t);
+
+        view.hand.move(x, y, 0);
+      });
+
+      if (currentRun !== run) return;
+
+      await animate(180, t => {
+        view.hand.move(edge, y, t);
+      });
+
+      await animate(900, t => {
+        const x = edge * (1 - t);
+
+        view.paperAt(x, t);
+        view.hand.move(x, y, 1);
+      });
+
+      await animate(130, t => {
+        view.hand.move(0, y, 1 - t);
+      });
+
+      await animate(220, t => {
+        view.hand.move(-160 * t, y, 0);
+        view.fadeHand(1 - t);
+      });
+
+      navigate();
+    } catch (error) {
+      console.error('Page transition unavailable:', error);
+      navigate();
+    } finally {
+      clearTimeout(watchdog);
+      window.removeEventListener('resize', navigate);
+    }
+  }
+
+  const navigationLinks = document.querySelectorAll(
+    'header .navbar a[href], header .nav-links a[href]'
+  );
+
+  navigationLinks.forEach(link => {
+    const url = new URL(link.href);
+
+    const isDestination = destinationUrls.some(destination => {
+      return (
+        url.origin === destination.origin &&
+        url.pathname === destination.pathname
+      );
+    });
+
+    const opensHere = !link.target || link.target === '_self';
+
+    if (
+      isDestination &&
+      opensHere &&
+      !link.hasAttribute('download')
+    ) {
+      link.addEventListener('click', changePage);
+    }
+  });
+
+  document.addEventListener('click', event => {
+    if (busy) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
+  }, true);
+
+  window.addEventListener('pageshow', event => {
+    if (!event.persisted) return;
+
+    run++;
+
+    effect?.dispose();
+    effect = null;
+
+    if (busy) transitioning = false;
+
+    busy = false;
+
+    document.body.classList.remove('is-peer-transitioning');
   });
 })();
