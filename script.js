@@ -396,7 +396,19 @@ async function initRobot() {
                     'Jaw_Right'
                 )
         };
+        // STARTING POSE
 
+        joints.shoulder.rotation.x =
+            THREE.MathUtils.degToRad(15);
+
+        joints.elbow.rotation.x =
+            THREE.MathUtils.degToRad(45);
+
+        joints.elbow.rotation.z =
+            THREE.MathUtils.degToRad(35);
+
+        joints.wrist.rotation.z =
+            THREE.MathUtils.degToRad(-35);
 
 
         // RENDER
