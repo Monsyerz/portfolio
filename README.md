@@ -2,18 +2,34 @@
 
 My personal portfolio, built with HTML, CSS, vanilla JavaScript and Three.js.
 
-The website presents my software projects and engineering background through a minimal layout and an interactive robotic arm.
+The website presents my software projects and engineering background through a minimal layout, an interactive robotic arm and animated page transitions.
 
 ## Features
 
 - Interactive 3D robotic arm loaded from a GLB model
 - Paper corners that reveal Projects and About Me on hover or keyboard focus
-- Animated navigation with the robot gripping and pulling a page into view
+- Full robotic arm interaction exclusive to the Home paper corners
+- Gripper-driven paper transitions between pages through the header navigation
 - Robot punch-through transition when returning Home
+- Vortex transition when entering Contact
 - Software and Engineering project filters
-- Engineering case studies and drawing galleries
+- Architectural glass enclosure case study with a drawing gallery
+- Contact page with a cyberpunk-inspired layout and GitHub link
 - Responsive layouts and reduced-motion support
-- Standard navigation links available without animation
+- Standard links remain available when JavaScript is disabled
+
+## Navigation
+
+The Home page provides two ways to explore the portfolio:
+
+- **Paper corners:** the robotic arm reaches for a corner, grips it and pulls the selected page into view.
+- **Header navigation:** a separate gripper pulls a page across the screen.
+
+Header navigation also provides paper transitions between About Me and Projects, and from Contact to either page.
+
+Returning Home uses a punch-through effect. Entering Contact triggers a vortex animation.
+
+Reduced-motion preferences disable animated transitions. If a transition encounters a loading error, navigation falls back to a standard page load.
 
 ## Projects
 
@@ -26,17 +42,26 @@ The website presents my software projects and engineering background through a m
 
 ### Engineering
 
-- Robotic Arm
-- Architectural Glass Enclosures
-- Metal Baffle Fabrication
+- **Architectural Glass Enclosures** — professional drafting case study featuring plans, elevations and connection details
+
+The robotic arm remains an interactive element on Home; it is no longer listed as a separate project.
+
+## Contact Page
+
+The Contact page includes name, email and message fields, a GitHub link and a LinkedIn placeholder.
+
+**Message submission is not connected yet.** The Send Message button remains disabled.
+
+The LinkedIn button is also disabled until a profile URL is added.
 
 ## Technologies
 
 - HTML
 - CSS
-- JavaScript
+- Vanilla JavaScript
 - Three.js
 - GLTFLoader
+- Web Animations API
 
 ## Run Locally
 
@@ -50,7 +75,7 @@ Then open:
 
 http://localhost:8000/
 
-Use a local server so the browser can load the GLB model and fetch page content for the transitions.
+Use a local server so the browser can load the GLB model and fetch page content for transitions. Opening the files directly through `file://` is not supported.
 
 Three.js is loaded from a CDN and requires an internet connection.
 
@@ -60,11 +85,21 @@ Three.js is loaded from a CDN and requires an internet connection.
 index.html
 aboutme.html
 projects.html
+contact.html
 style.css
 script.js
 projects/
+  glass-enclosures.html
 assets/
+  projects/
+    robotic-arm-v2.glb
+    glass-enclosures/
+      residential-1.jpg
+      residential-2.jpg
+      residential-3.jpg
 ```
+
+All pages share `style.css` and `script.js`.
 
 The robotic arm model is loaded from:
 
@@ -86,7 +121,20 @@ Check Git diff whitespace:
 git diff --check
 ```
 
-Visual checks should cover both paper corners, page transitions, project filters, keyboard navigation and mobile layouts.
+Manual browser checks should cover:
+
+- Both Home paper corners
+- Header navigation from Home, About Me, Projects and Contact
+- Returning Home through the navigation and logo
+- The Contact vortex transition
+- Project filters: All, Software and Engineering
+- Browser Back navigation after transitions
+- Keyboard navigation and visible focus indicators
+- Reduced-motion preferences
+- Mobile layouts
+- Drawing previews and full-size image links
+
+Syntax checks do not verify the appearance or timing of animations.
 
 ## About
 
